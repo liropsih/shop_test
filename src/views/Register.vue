@@ -66,7 +66,7 @@
       </div>
 
       <div class="input-field">
-        <select v-model="is_admin" ref="adminselect">
+        <select v-model="is_admin" ref="adminselect" class="no-autoinit">
           <option value="0">Нет</option>
           <option value="1">Да</option>
         </select>
@@ -100,6 +100,7 @@
 </template>
 
 <script>
+import messages from '@/utils/messages'
 import { email, required, minLength } from 'vuelidate/lib/validators'
 
 export default {
@@ -109,7 +110,6 @@ export default {
   //     }
   //   },
   name: 'register',
-  props: ["nextUrl"],
   data: () => ({
     name: '',
     email: '',
@@ -124,8 +124,11 @@ export default {
     name: { required },
     agree: { checked: v => v }
   },
-  mounted () {
+  mounted() {
     M.FormSelect.init(this.$refs.adminselect)
+    if (messages[this.$route.query.message]) {
+      this.$message(messages[this.$route.query.message])
+    }
   },
   methods: {
     async register() {
@@ -139,36 +142,9 @@ export default {
         password: this.password,
         is_admin: this.is_admin
       }
-
-      let url = "http://localhost:3000/register"
-      if (this.is_admin != null || this.is_admin == 1) url = "http://localhost:3000/register-admin"
-
       try {
-
-        this.$http.post(url, formData)
-          .then(response => {
-            localStorage.setItem('user', JSON.stringify(response.data.user))
-            localStorage.setItem('jwt', response.data.token)
-
-            if (localStorage.getItem('jwt') != null) {
-              this.$emit('loggedIn')
-              if (this.$route.params.nextUrl != null) {
-                this.$router.push(this.$route.params.nextUrl)
-              }
-              else {
-                this.$router.push('/')
-              }
-            }
-          })
-          .catch(error => {
-            console.error(error)
-          })
-        // await this.$store.dispatch('register', formData)
-
-        // this.$router.push('/')
-
-
-
+        await this.$store.dispatch('register', formData)
+        this.$router.push('/dashboard')
       } catch (e) { }
     }
   }

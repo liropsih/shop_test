@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import store from '@/store'
 
 Vue.use(VueRouter)
 
@@ -7,19 +8,19 @@ const routes = [
   {
     path: '/',
     name: 'Home',
-    meta: { layout: 'main', auth: true },
+    meta: { layout: 'main' },
     component: () => import('../views/Home.vue')
   },
   {
     path: '/items',
     name: 'Items',
-    meta: { layout: 'main', auth: true },
+    meta: { layout: 'main' },
     component: () => import('../views/Items.vue')
   },
   {
     path: '/sale',
     name: 'Sale',
-    meta: { layout: 'main', auth: true },
+    meta: { layout: 'main' },
     component: () => import('../views/Sale.vue')
   },
   {
@@ -45,7 +46,7 @@ const routes = [
     name: 'Dashboard',
     meta: {
       layout: 'main',
-      requiresAuth: true
+      auth: true
     },
     component: () => import('../views/Dashboard.vue')
   },
@@ -54,7 +55,7 @@ const routes = [
     name: 'Admin',
     meta: {
       layout: 'main',
-      requiresAuth: true,
+      auth: true,
       is_admin: true
     },
     component: () => import('../views/Admin.vue')
@@ -68,34 +69,26 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  if (to.matched.some(record => record.meta.requiresAuth)) {
-    if (localStorage.getItem('jwt') == null) {
-      next({
-        path: '/login',
-        params: { nextUrl: to.fullPath }
-      })
-    } else {
-      let user = JSON.parse(localStorage.getItem('user'))
-      if (to.matched.some(record => record.meta.is_admin)) {
-        if (user.is_admin == 1) {
-          next()
-        }
-        else {
-          next({ name: 'Dashboard' })
-        }
-      } else {
-        next()
-      }
-    }
-  } else if (to.matched.some(record => record.meta.guest)) {
-    if (localStorage.getItem('jwt') == null) {
+  if(to.matched.some(record => record.meta.auth)) {
+    if (store.getters.isLoggedIn) {
       next()
+      return
     }
-    else {
-      next({ name: 'Dashboard' })
+    next('/login?message=login') 
+  } else if (to.matched.some(record => record.meta.is_admin)) {
+    if (store.getters.is_admin == 1) {
+      next()
+      return
     }
+    next('/dashboard') 
+  } else if (to.matched.some(record => record.meta.is_guest)) {
+    if (store.getters.authStatus == null) {
+      next()
+      return
+    }
+    next('/dashboard') 
   } else {
-    next()
+    next() 
   }
 })
 

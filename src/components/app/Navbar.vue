@@ -80,13 +80,23 @@
             </a>
             <!-- Dropdown Profile -->
             <ul id="dropdownProfile" class="dropdown-content">
-              <li>
-                <router-link to="/profile" class="black-text">
-                  <i class="material-icons">account_circle</i>Профиль
+              <li v-if="!isLoggedIn">
+                <router-link to="/login" class="black-text">
+                  <i class="material-icons">person</i>Вход
                 </router-link>
               </li>
-              <li class="divider"></li>
-              <li>
+              <li v-if="!isLoggedIn">
+                <router-link to="/registration" class="black-text">
+                  <i class="material-icons">person_add</i>Регистрация
+                </router-link>
+              </li>
+              <li v-if="isLoggedIn">
+                <router-link to="/dashboard" class="black-text">
+                  <i class="material-icons">person</i>Профиль
+                </router-link>
+              </li>
+              <li v-if="isLoggedIn" class="divider"></li>
+              <li v-if="isLoggedIn">
                 <a href="#!" class="black-text" @click.prevent="logout">
                   <i class="material-icons">assignment_return</i>Выйти
                 </a>
@@ -103,6 +113,9 @@
 export default {
   data: () => ({
   }),
+  computed : {
+      isLoggedIn : function(){ return this.$store.getters.isLoggedIn}
+    },
   mounted() {
     M.Dropdown.init(this.$refs.dropdownProfile, {
       constrainWidth: false,
@@ -116,6 +129,10 @@ export default {
   methods: {
     sideNavOpen() {
       this.$store.state.sideNav.open()
+    },
+    logout () {
+      this.$store.dispatch('logout')
+      this.$router.push('/?message=logout')
     }
   }
 }
