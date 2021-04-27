@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import store from '@/store'
+import axios from 'axios'
 
 Vue.use(VueRouter)
 
@@ -69,11 +70,18 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
+  // if (!store.getters.user.name && store.getters.isLoggedIn) {
+    // store.dispatch('getUser')
+    // console.log(store.getters.user)
+  // }
+  const token = {token: localStorage.getItem('token')}
+  const post = axios({ url: '/getuser', data: token, method: 'POST' })
+  console.log(post.data.user)
   const meta_auth = to.matched.some(record => record.meta.is_auth)
   const meta_guest = to.matched.some(record => record.meta.is_guest)
   const meta_admin = to.matched.some(record => record.meta.is_admin)
   const isLogin = store.getters.isLoggedIn
-  const status = store.getters.user.status
+  // const status = store.getters.user.status
   console.log(isLogin, status)
   if (meta_auth && !isLogin) {
     next('/login?message=login')

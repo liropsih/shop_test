@@ -1,9 +1,9 @@
-"use strict";
-const sqlite3 = require('sqlite3').verbose();
+"use strict"
+const sqlite3 = require('sqlite3').verbose()
 
 class Db {
     constructor(file) {
-        this.db = new sqlite3.Database(file);
+        this.db = new sqlite3.Database(file)
         this.createTable()
     }
 
@@ -15,7 +15,7 @@ class Db {
                 email text UNIQUE,
                 password text,
                 is_admin integer)`
-        return this.db.run(sql);
+        return this.db.run(sql)
     }
 
     selectById(id, callback) {
