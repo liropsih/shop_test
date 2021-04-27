@@ -64,14 +64,14 @@
           {{ password.length }}</small
         >
       </div>
-
+<!-- 
       <div class="input-field">
         <select v-model="is_admin" ref="adminselect" class="no-autoinit">
           <option value="0">Нет</option>
           <option value="1">Да</option>
         </select>
         <label>Админ?</label>
-      </div>
+      </div> -->
 
       <p>
         <label>
@@ -116,7 +116,7 @@ export default {
     password: '',
     // password_confirmation: '',
     agree: false,
-    is_admin: null
+    // is_admin: null
   }),
   validations: {
     email: { email, required },
@@ -125,7 +125,7 @@ export default {
     agree: { checked: v => v }
   },
   mounted() {
-    M.FormSelect.init(this.$refs.adminselect)
+    // M.FormSelect.init(this.$refs.adminselect)
     if (messages[this.$route.query.message]) {
       this.$message(messages[this.$route.query.message])
     }
@@ -140,7 +140,7 @@ export default {
         name: this.name,
         email: this.email,
         password: this.password,
-        is_admin: this.is_admin
+        // is_admin: this.is_admin
       }
       try {
         await this.$store.dispatch('register', formData)

@@ -13,36 +13,36 @@ class Db {
                 id integer PRIMARY KEY,
                 name text,
                 email text UNIQUE,
-                user_pass text,
+                password text,
                 is_admin integer)`
         return this.db.run(sql);
+    }
+
+    selectById(id, callback) {
+        return this.db.get(
+            `SELECT * FROM user WHERE id = ?`,
+            [id], function (err, row) {
+                callback(err, row)
+            })
     }
 
     selectByEmail(email, callback) {
         return this.db.get(
             `SELECT * FROM user WHERE email = ?`,
-            [email],function(err,row){
-                callback(err,row)
-            })
-    }
-
-    insertAdmin(user, callback) {
-        return this.db.run(
-            'INSERT INTO user (name,email,user_pass,is_admin) VALUES (?,?,?,?)',
-            user, (err) => {
-                callback(err)
+            [email], function (err, row) {
+                callback(err, row)
             })
     }
 
     selectAll(callback) {
-        return this.db.all(`SELECT * FROM user`, function(err,rows){
-            callback(err,rows)
+        return this.db.all(`SELECT * FROM user`, function (err, rows) {
+            callback(err, rows)
         })
     }
 
     insert(user, callback) {
         return this.db.run(
-            'INSERT INTO user (name,email,user_pass) VALUES (?,?,?)',
+            'INSERT INTO user (name,email,password) VALUES (?,?,?)',
             user, (err) => {
                 callback(err)
             })

@@ -20,11 +20,12 @@ Vue.use(Vuelidate)
 Vue.use(VueMeta)
 Vue.component('Loader', Loader)
 
-Vue.prototype.$http = axios;
+Vue.prototype.$http = axios
 const token = localStorage.getItem('token')
 if (token) {
   Vue.prototype.$http.defaults.headers.common['Authorization'] = token
 }
+axios.defaults.baseURL = 'http://localhost:3000'
 
 let app
 app = new Vue({

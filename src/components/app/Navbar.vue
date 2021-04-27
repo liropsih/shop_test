@@ -75,8 +75,9 @@
               data-target="dropdownProfile"
               ref="dropdownProfile"
             >
-              NAME
-              <i class="material-icons right">arrow_drop_down</i>
+              {{ username || "username" }}
+              <!-- <i class="material-icons right">person</i> -->
+              <i class="material-icons right">input</i>
             </a>
             <!-- Dropdown Profile -->
             <ul id="dropdownProfile" class="dropdown-content">
@@ -110,27 +111,31 @@
 </template>
 
 <script>
+// import { mapGetters } from 'vuex'
+
 export default {
   data: () => ({
   }),
-  computed : {
-      isLoggedIn : function(){ return this.$store.getters.isLoggedIn}
-    },
+  computed: {
+    isLoggedIn() { return this.$store.getters.isLoggedIn },
+    username() { return this.$store.getters.user.name },
+    // ...mapGetters(['username'])
+  },
   mounted() {
     M.Dropdown.init(this.$refs.dropdownProfile, {
       constrainWidth: false,
       coverTrigger: false
-    }),
+    })
     M.Dropdown.init(this.$refs.dropdownCart, {
-        constrainWidth: false,
-        coverTrigger: false
-      })
+      constrainWidth: false,
+      coverTrigger: false
+    })
   },
   methods: {
     sideNavOpen() {
       this.$store.state.sideNav.open()
     },
-    logout () {
+    logout() {
       this.$store.dispatch('logout')
       this.$router.push('/?message=logout')
     }

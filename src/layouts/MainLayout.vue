@@ -22,8 +22,19 @@ import messages from '@/utils/messages'
 export default {
   name: "main-layout",
   data: () => ({
-    loading: false
+    loading: true
   }),
+  async mounted() {
+    if (!this.$store.getters.user.name && this.$store.getters.isLoggedIn) {
+      await this.$store.dispatch('getUser')
+      console.log(this.$store.getters.user)
+    }
+    M.AutoInit()
+    if (messages[this.$route.query.message]) {
+      this.$message(messages[this.$route.query.message])
+    }
+    this.loading = false
+  },
   components: { Navbar, Sidebar, Footer },
   computed: {
     error() {
@@ -39,12 +50,6 @@ export default {
     },
     message(message) {
       this.$message(messages[message])
-    }
-  },
-  mounted() {
-    M.AutoInit()
-    if (messages[this.$route.query.message]) {
-      this.$message(messages[this.$route.query.message])
     }
   }
 }
