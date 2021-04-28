@@ -1,5 +1,5 @@
 <template>
-  <form class="card auth-card" @submit.prevent="register">
+  <form class="card auth-card" @submit.prevent="useHttp">
     <div class="card-content">
       <span class="card-title">Laravel Test Shop</span>
       <div class="input-field">
@@ -64,7 +64,7 @@
           {{ password.length }}</small
         >
       </div>
-<!-- 
+      <!-- 
       <div class="input-field">
         <select v-model="is_admin" ref="adminselect" class="no-autoinit">
           <option value="0">Нет</option>
@@ -131,6 +131,23 @@ export default {
     }
   },
   methods: {
+    async useHttp() {
+      if (this.$v.$invalid) {
+        this.$v.$touch()
+        return
+      }
+      const formData = {
+        name: this.name,
+        email: this.email,
+        password: this.password
+      }
+      try {
+        // const data = await request('/api/auth/register', 'POST', formData)
+        const data = await this.$store.dispatch('register', { url: this.$backend + '/api/auth/register', method: 'POST', body: formData })
+        // const disp = { url: '/api/auth/register', method: 'POST', body: formData }
+        console.log('data: ', data)
+      } catch (e) { }
+    },
     async register() {
       if (this.$v.$invalid) {
         this.$v.$touch()

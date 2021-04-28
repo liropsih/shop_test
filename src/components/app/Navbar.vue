@@ -117,8 +117,8 @@ export default {
   data: () => ({
   }),
   computed: {
-    isLoggedIn() { return this.$store.getters.isLoggedIn },
-    username() { return this.$store.getters.user.name },
+    // isLoggedIn() { return this.$store.getters.isLoggedIn },
+    // username() { return this.$store.getters.user.name },
     // ...mapGetters(['username'])
   },
   mounted() {
