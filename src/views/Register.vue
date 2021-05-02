@@ -143,9 +143,8 @@ export default {
       }
       try {
         // const data = await request('/api/auth/register', 'POST', formData)
-        const data = await this.$store.dispatch('register', { url: this.$backend + '/api/auth/register', method: 'POST', body: formData })
+        const data = await this.$store.dispatch('register', formData)
         // const disp = { url: '/api/auth/register', method: 'POST', body: formData }
-        console.log('data: ', data)
       } catch (e) { }
     },
     async register() {

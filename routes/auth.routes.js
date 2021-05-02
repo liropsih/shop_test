@@ -6,7 +6,7 @@ const config = require('config')
 const jwt = require('jsonwebtoken')
 const { check, validationResult } = require('express-validator')
 
-const DB = require('../models/User')
+const DB = require('../database')
 const db = new DB("sqlitedb")
 
 router.post(

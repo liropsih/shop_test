@@ -1,5 +1,7 @@
 // import axios from 'axios'
 
+import { useFetch } from '@/functions/useFetch.function'
+
 export default {
     state: {
         // loading: false
@@ -11,30 +13,14 @@ export default {
         },
     },
     actions: {
-        async register({ commit }, { url, method = 'GET', body = null, headers = {} }) {
+        async register({ commit }, body) {
             try {
-                if (body) {
-                    body = JSON.stringify(body)
-                    headers['Content-Type'] = 'application/json'
-                }
-                const response = await fetch(url, { method, body, headers })
-                const data = await response.json()
-                if (!response.ok) {
-                    throw new Error(data.message || 'Что-то пошло не так')
-                }
+                const data = await useFetch('http://localhost:3000/api/auth/register', 'POST', body)
                 commit('login', data)
             } catch (e) {
-                // commit('setLoading', false)
-                // commit('setError', e.message)
-                // console.log('catch ', e)
                 commit('setError', e.message)
-                setTimeout(() => commit('clearError'), 500)
-                // debugger
-                // throw e
+                setTimeout(() => commit('clearError'), 200)
             }
-            // }
-            // commit('setError', null)
-            // return { loading, request, error }
         }
         // async login({ commit }, user) {
         //     const response = await axios({ url: '/login', data: user, method: 'POST' })
