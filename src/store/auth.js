@@ -4,23 +4,51 @@ import { useFetch } from '@/functions/useFetch.function'
 
 export default {
     state: {
-        // loading: false
-        user: null
+        token: JSON.parse(localStorage.getItem('userData.token')) || '',
+        uid: null
     },
     mutations: {
         login(state, data) {
-            state.user = data
+            state.uid = data.uid
+            state.token = data.token
         },
+        logout(state) {
+            state.uid = null
+            state.token = null
+        }
     },
     actions: {
-        async register({ commit }, body) {
+        //useFetch ЗАПИХНУТЬ В ЭКШН ТОЖЕ!!!!!!!
+        
+        async register({ dispatch, commit }, body) {
             try {
                 const data = await useFetch('http://localhost:3000/api/auth/register', 'POST', body)
+                // commit('login', data)
+                await dispatch('login', body)
+            } catch (e) {
+                commit('setError', e.message)
+                setTimeout(() => commit('clearError'), 200)
+            }
+        },
+
+        async login({ commit }, body) {
+            try {
+                const data = await useFetch('http://localhost:3000/api/auth/login', 'POST', body)
+                localStorage.setItem('userData', JSON.stringify({ 
+                    token: data.token, 
+                    uid: data.uid, 
+                    name: data.name 
+                }))
                 commit('login', data)
             } catch (e) {
                 commit('setError', e.message)
                 setTimeout(() => commit('clearError'), 200)
             }
+        },
+
+        logout({ commit }) {
+            localStorage.removeItem('userData')
+            commit('logout')
         }
         // async login({ commit }, user) {
         //     const response = await axios({ url: '/login', data: user, method: 'POST' })
@@ -81,11 +109,13 @@ export default {
 
     },
     getters: {
-        // isLoggedIn: state => !!state.token,
-        user: state => state.user,
+        isLoggedIn: s => !!s.token,
+        // user: state => state.user,
         // getToken: state => state.token
         // username: state => state.user.name,
         // authStatus: state => state.status,
         // info: state => state.info
+        uid: s => s.uid,
+        token: s => s.token
     }
 }

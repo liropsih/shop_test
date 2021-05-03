@@ -1,5 +1,5 @@
 <template>
-  <form class="card auth-card" @submit.prevent="useHttp">
+  <form class="card auth-card" @submit.prevent="register">
     <div class="card-content">
       <span class="card-title">Laravel Test Shop</span>
       <div class="input-field">
@@ -131,22 +131,6 @@ export default {
     }
   },
   methods: {
-    async useHttp() {
-      if (this.$v.$invalid) {
-        this.$v.$touch()
-        return
-      }
-      const formData = {
-        name: this.name,
-        email: this.email,
-        password: this.password
-      }
-      try {
-        // const data = await request('/api/auth/register', 'POST', formData)
-        const data = await this.$store.dispatch('register', formData)
-        // const disp = { url: '/api/auth/register', method: 'POST', body: formData }
-      } catch (e) { }
-    },
     async register() {
       if (this.$v.$invalid) {
         this.$v.$touch()
@@ -155,8 +139,7 @@ export default {
       const formData = {
         name: this.name,
         email: this.email,
-        password: this.password,
-        // is_admin: this.is_admin
+        password: this.password
       }
       try {
         await this.$store.dispatch('register', formData)
