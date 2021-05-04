@@ -80,6 +80,7 @@ export default {
   }),
   mounted() {
     this.$store.state.sideNav = M.Sidenav.init(this.$refs.sideNav)
+    M.AutoInit()
   },
   methods: {
     sideNavClose() {

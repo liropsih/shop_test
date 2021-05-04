@@ -4,17 +4,36 @@ const sqlite3 = require('sqlite3').verbose()
 class Db {
     constructor(file) {
         this.db = new sqlite3.Database(file)
-        this.createTable()
+        const user = `CREATE TABLE IF NOT EXISTS user (
+            id INTEGER PRIMARY KEY,
+            name TEXT,
+            email TEXT UNIQUE,
+            password TEXT,
+            permission integer
+        )`
+        // const user = `CREATE TABLE IF NOT EXISTS user (
+        //     id	BLOB NOT NULL DEFAULT (randomblob(8)) UNIQUE,
+        //     name TEXT,
+        //     email TEXT UNIQUE,
+        //     password TEXT,
+        //     permission INTEGER
+        // )`
+        const cats = `CREATE TABLE IF NOT EXISTS cats (
+            id INTEGER PRIMARY KEY,
+            name TEXT UNIQUE
+        )`
+        const subcats = `CREATE TABLE IF NOT EXISTS subcats (
+            id INTEGER PRIMARY KEY,
+            catname TEXT,
+            name TEXT UNIQUE,
+            FOREIGN KEY (catname) REFERENCES cats (name)
+        )`
+        this.createTable(user)
+        this.createTable(cats)
+        this.createTable(subcats)
     }
 
-    createTable() {
-        const sql = `
-            CREATE TABLE IF NOT EXISTS user (
-                id integer PRIMARY KEY,
-                name text,
-                email text UNIQUE,
-                password text,
-                permission integer)`
+    createTable(sql) {
         return this.db.run(sql);
     }
 

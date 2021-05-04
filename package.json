@@ -5,9 +5,9 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "start": "node app",
+    "start": "cross-env NODE_ENV=production node app",
     "server": "nodemon app",
-    "dev": "concurrently \"npm run server\" \"npm run serve\""
+    "dev": "cross-env NODE_ENV=development concurrently \"npm run server\" \"npm run serve\""
   },
   "dependencies": {
     "axios": "^0.21.1",
@@ -33,6 +33,7 @@
     "@vue/cli-plugin-vuex": "~4.5.0",
     "@vue/cli-service": "~4.5.0",
     "concurrently": "^6.0.2",
+    "cross-env": "^7.0.3",
     "nodemon": "^2.0.7",
     "sass": "^1.32.11",
     "sass-loader": "^8.0.2",

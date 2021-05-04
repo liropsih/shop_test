@@ -1,6 +1,8 @@
 "use strict"
 const express = require('express')
 const config = require('config')
+const path = require('path')
+const { dirname } = require('path')
 
 // const bcrypt = require('bcrypt')
 // const bcrypt_config = require('./bcrypt.config')
@@ -19,6 +21,12 @@ const allowCrossDomain = function (req, res, next) {
 app.use(allowCrossDomain)
 
 app.use('/api/auth', require('./routes/auth.routes'))
+if (process.env.NODE_ENV === 'production') {
+    app.use('/', express.static(path.join(__dirname, 'dist')))
+    app.get('*', (req, res) => {
+        res.sendFile(path.resolve(__dirname, 'dist', 'index.html'))
+    })
+}
 // const router = express.Router()
 
 const PORT = config.get('port')

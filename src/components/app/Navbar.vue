@@ -118,7 +118,7 @@ export default {
   }),
   computed: {
     isLoggedIn() { return this.$store.getters.isLoggedIn },
-    // username() { return this.$store.getters.user.name },
+    username() { return this.$store.getters.username },
     // ...mapGetters(['username'])
   },
   mounted() {

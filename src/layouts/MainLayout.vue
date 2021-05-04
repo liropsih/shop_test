@@ -29,11 +29,10 @@ export default {
     //   await this.$store.dispatch('getUser')
     //   console.log(this.$store.getters.user)
     // }
-    M.AutoInit()
+    this.loading = false
     if (messages[this.$route.query.message]) {
       this.$message(messages[this.$route.query.message])
     }
-    this.loading = false
   },
   components: { Navbar, Sidebar, Footer },
   computed: {

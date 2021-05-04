@@ -37,7 +37,7 @@ router.post(
                     if (e) { throw e }
                 })
                 // res.json({ name, email })
-                res.status(201).json({ message: 'Пользователь создан', name, email })
+                res.status(201).json({ message: 'Пользователь создан' })
             })
         } catch (e) {
             return res.status(500).json({ message: 'Что-то пошло не так, попробуйте снова' })

@@ -1,16 +1,21 @@
 // import axios from 'axios'
 
 import { useFetch } from '@/functions/useFetch.function'
+const userData = JSON.parse(localStorage.getItem('userData')) || {}
 
 export default {
     state: {
-        token: JSON.parse(localStorage.getItem('userData.token')) || '',
-        uid: null
+        token: userData.token || null,
+        uid: userData.uid || null,
+        name: userData.name || null,
+        permission: userData.permission || null
     },
     mutations: {
         login(state, data) {
-            state.uid = data.uid
             state.token = data.token
+            state.uid = data.uid
+            state.name = data.name
+            state.status = data.status || null
         },
         logout(state) {
             state.uid = null
@@ -18,31 +23,31 @@ export default {
         }
     },
     actions: {
-        //useFetch ЗАПИХНУТЬ В ЭКШН ТОЖЕ!!!!!!!
-        
         async register({ dispatch, commit }, body) {
             try {
                 const data = await useFetch('http://localhost:3000/api/auth/register', 'POST', body)
-                // commit('login', data)
                 await dispatch('login', body)
             } catch (e) {
                 commit('setError', e.message)
                 setTimeout(() => commit('clearError'), 200)
+                throw (e)
             }
         },
 
         async login({ commit }, body) {
             try {
                 const data = await useFetch('http://localhost:3000/api/auth/login', 'POST', body)
-                localStorage.setItem('userData', JSON.stringify({ 
-                    token: data.token, 
-                    uid: data.uid, 
-                    name: data.name 
+                localStorage.setItem('userData', JSON.stringify({
+                    token: data.token,
+                    uid: data.uid,
+                    name: data.name,
+                    permission: data.permission
                 }))
                 commit('login', data)
             } catch (e) {
                 commit('setError', e.message)
                 setTimeout(() => commit('clearError'), 200)
+                throw (e)
             }
         },
 
@@ -112,10 +117,11 @@ export default {
         isLoggedIn: s => !!s.token,
         // user: state => state.user,
         // getToken: state => state.token
-        // username: state => state.user.name,
+        username: s => s.name,
         // authStatus: state => state.status,
         // info: state => state.info
         uid: s => s.uid,
-        token: s => s.token
+        token: s => s.token,
+        permission: s => s.permission
     }
 }
