@@ -6,26 +6,24 @@ const userData = JSON.parse(localStorage.getItem('userData')) || {}
 export default {
     state: {
         token: userData.token || null,
-        uid: userData.uid || null,
         name: userData.name || null,
-        permission: userData.permission || null
+        status: userData.status || null
     },
     mutations: {
         login(state, data) {
             state.token = data.token
-            state.uid = data.uid
             state.name = data.name
             state.status = data.status || null
         },
         logout(state) {
-            state.uid = null
             state.token = null
+            localStorage.removeItem('userData')
         }
     },
     actions: {
         async register({ dispatch, commit }, body) {
             try {
-                const data = await useFetch('http://localhost:3000/api/auth/register', 'POST', body)
+                await useFetch('http://localhost:3000/api/auth/register', 'POST', body)
                 await dispatch('login', body)
             } catch (e) {
                 commit('setError', e.message)
@@ -39,9 +37,8 @@ export default {
                 const data = await useFetch('http://localhost:3000/api/auth/login', 'POST', body)
                 localStorage.setItem('userData', JSON.stringify({
                     token: data.token,
-                    uid: data.uid,
                     name: data.name,
-                    permission: data.permission
+                    status: data.status
                 }))
                 commit('login', data)
             } catch (e) {
@@ -52,9 +49,18 @@ export default {
         },
 
         logout({ commit }) {
-            localStorage.removeItem('userData')
             commit('logout')
+        },
+
+        async tokenVerify({ commit }) {
+            try {
+                const body = { token: this.getters.token }
+                await useFetch('http://localhost:3000/api/auth/tokenverify', 'POST', body)
+            } catch (e) {
+                commit('logout')
+            }
         }
+
         // async login({ commit }, user) {
         //     const response = await axios({ url: '/login', data: user, method: 'POST' })
         //     try {
@@ -115,13 +121,8 @@ export default {
     },
     getters: {
         isLoggedIn: s => !!s.token,
-        // user: state => state.user,
-        // getToken: state => state.token
         username: s => s.name,
-        // authStatus: state => state.status,
-        // info: state => state.info
-        uid: s => s.uid,
         token: s => s.token,
-        permission: s => s.permission
+        status: s => s.status
     }
 }

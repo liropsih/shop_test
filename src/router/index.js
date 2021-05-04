@@ -70,24 +70,23 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
-//   // if (!store.getters.user.name && store.getters.isLoggedIn) {
-//     // store.dispatch('getUser')
-//     // console.log(store.getters.user)
-//   // }
-//   // const token = {token: localStorage.getItem('token')}
-//   // const post = axios({ url: '/getuser', data: token, method: 'POST' })
-//   // console.log(post.data.user)
+  //   // if (!store.getters.user.name && store.getters.isLoggedIn) {
+  //     // store.dispatch('getUser')
+  //     // console.log(store.getters.user)
+  //   // }
+  //   // const token = {token: localStorage.getItem('token')}
+  //   // const post = axios({ url: '/getuser', data: token, method: 'POST' })
+  //   // console.log(post.data.user)
   const meta_auth = to.matched.some(record => record.meta.is_auth)
   const meta_guest = to.matched.some(record => record.meta.is_guest)
   const meta_admin = to.matched.some(record => record.meta.is_admin)
-  const isLogin = store.getters.isLoggedIn
-  const permission = store.getters.permission
-//   // console.log(isLogin, status)
-  if (meta_auth && !isLogin) {
+  const isLoggedIn = store.getters.isLoggedIn
+  const status = store.getters.status
+  if (meta_auth && !isLoggedIn) {
     next('/login?message=login')
-  } else if (meta_admin && (permission != 1)) {
+  } else if (meta_admin && (status != 1 && status != 2)) {
     next('/dashboard')
-  } else if (meta_guest && isLogin) {
+  } else if (meta_guest && isLoggedIn) {
     next('/dashboard')
   } else {
     next()

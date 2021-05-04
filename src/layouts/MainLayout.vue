@@ -25,10 +25,9 @@ export default {
     loading: true
   }),
   async mounted() {
-    // if (!this.$store.getters.user.name && this.$store.getters.isLoggedIn) {
-    //   await this.$store.dispatch('getUser')
-    //   console.log(this.$store.getters.user)
-    // }
+    if (this.$store.getters.isLoggedIn) {
+      await this.$store.dispatch('tokenVerify')
+    }
     this.loading = false
     if (messages[this.$route.query.message]) {
       this.$message(messages[this.$route.query.message])

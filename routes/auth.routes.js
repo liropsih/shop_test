@@ -36,11 +36,10 @@ router.post(
                 ], (e) => {
                     if (e) { throw e }
                 })
-                // res.json({ name, email })
                 res.status(201).json({ message: 'Пользователь создан' })
             })
         } catch (e) {
-            return res.status(500).json({ message: 'Что-то пошло не так, попробуйте снова' })
+            res.status(500).json({ message: 'Что-то пошло не так, попробуйте снова' })
         }
     })
 
@@ -72,13 +71,41 @@ router.post(
                     config.get('jwtSecret'),
                     { expiresIn: '1h' }
                 )
-                res.json({ token, uid: user.id, name: user.name })
+                if (!!user.permission) {
+                    res.json({ token, name: user.name, status: user.permission })
+                } else {
+                    res.json({ token, name: user.name })
+                }
                 // return res.status(201).json({ message: 'Вход выполнен' })
             })
         } catch (e) {
-            return res.status(500).json({ message: 'Что-то пошло не так, попробуйте снова' })
+            res.status(500).json({ message: 'Что-то пошло не так, попробуйте снова' })
         }
     })
+router.post('/tokenverify', (req, res) => {
+    try {
+        const tokenverify = jwt.verify(req.body.token, config.get('jwtSecret'))
+        if (tokenverify) {
+            res.status(201).json({ message: 'Токен подтверждён' })
+        }
+    } catch (e) {
+        res.status(401).json({ message: 'Токен устарел' })
+    }
+
+    // let id = (jwt.decode(req.body.token)).id
+    // db.selectById(id, (err, user) => {
+    //     if (err) return res.status(500).send('Error on the server.')
+    //     if (!user) return res.status(404).send('No user found.')
+    //     res.status(200).send({
+    //         user: {
+    //             id: user.id,
+    //             name: user.name,
+    //             email: user.email,
+    //             status: user.is_admin
+    //         }
+    //     })
+    // })
+})
 // router.post('/login', (req, res) => {
 //     db.selectByEmail(req.body.email, (err, user) => {
 //         if (err) return res.status(500).send('Error on the server.')
