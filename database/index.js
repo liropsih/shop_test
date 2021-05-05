@@ -11,26 +11,41 @@ class Db {
             password TEXT,
             permission integer
         )`
-        // const user = `CREATE TABLE IF NOT EXISTS user (
-        //     id	BLOB NOT NULL DEFAULT (randomblob(8)) UNIQUE,
-        //     name TEXT,
-        //     email TEXT UNIQUE,
-        //     password TEXT,
-        //     permission INTEGER
-        // )`
-        const cats = `CREATE TABLE IF NOT EXISTS cats (
+        const cat = `CREATE TABLE IF NOT EXISTS cat (
             id INTEGER PRIMARY KEY,
             name TEXT UNIQUE
         )`
-        const subcats = `CREATE TABLE IF NOT EXISTS subcats (
+        const subcat = `CREATE TABLE IF NOT EXISTS subcat (
             id INTEGER PRIMARY KEY,
-            catname TEXT,
             name TEXT UNIQUE,
-            FOREIGN KEY (catname) REFERENCES cats (name)
+            cat_id INTEGER,
+            FOREIGN KEY (cat_id) REFERENCES cat (id)
+        )`
+        const product = `CREATE TABLE IF NOT EXISTS product (
+            id INTEGER PRIMARY KEY,
+            name TEXT,
+            description TEXT,
+            quantity INTEGER,
+            price INTEGER,
+            price_old INTEGER,
+            image TEXT,
+            subcat_id INTEGER,
+            FOREIGN KEY (subcat_id) REFERENCES subcat (id)
+        )`
+        const order = `CREATE TABLE IF NOT EXISTS order (
+            id INTEGER PRIMARY KEY,
+            product_id INTEGER,
+            user_id INTEGER,
+            quantity INTEGER,
+            FOREIGN KEY (product_id) REFERENCES product (id),
+            FOREIGN KEY (user_id) REFERENCES user (id)
         )`
         this.createTable(user)
-        this.createTable(cats)
-        this.createTable(subcats)
+        // this.createTable(cat)
+        // this.createTable(subcat)
+        // this.createTable(product)
+        // this.createTable(order)
+        
     }
 
     createTable(sql) {
@@ -53,6 +68,13 @@ class Db {
             })
     }
 
+        // const user = `CREATE TABLE IF NOT EXISTS user (
+        //     id	BLOB NOT NULL DEFAULT (randomblob(8)) UNIQUE,
+        //     name TEXT,
+        //     email TEXT UNIQUE,
+        //     password TEXT,
+        //     permission INTEGER
+        // )`
 
     // async findOne(data, sel, callback) {
     //     return await this.db.get(

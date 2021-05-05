@@ -75,7 +75,7 @@
               data-target="dropdownProfile"
               ref="dropdownProfile"
             >
-              {{ username || "username" }}
+              {{ username || "Авторизация" }}
               <!-- <i class="material-icons right">person</i> -->
               <i class="material-icons right">input</i>
             </a>
