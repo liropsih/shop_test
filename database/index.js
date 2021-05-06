@@ -6,10 +6,16 @@ class Db {
         this.db = new sqlite3.Database(file)
         const user = `CREATE TABLE IF NOT EXISTS user (
             id INTEGER PRIMARY KEY,
-            name TEXT,
-            email TEXT UNIQUE,
+            login TEXT UNIQUE,
             password TEXT,
-            permission integer
+            firstname TEXT,
+            lastname TEXT,
+            patronymic TEXT,
+            email TEXT UNIQUE,
+            phone INTEGER UNIQUE,
+            birthdate TEXT,
+            regdate TEXT,
+            permission INTEGER
         )`
         const cat = `CREATE TABLE IF NOT EXISTS cat (
             id INTEGER PRIMARY KEY,
@@ -32,19 +38,42 @@ class Db {
             subcat_id INTEGER,
             FOREIGN KEY (subcat_id) REFERENCES subcat (id)
         )`
+        const promo_code =  `CREATE TABLE IF NOT EXISTS promo_code (
+            id INTEGER PRIMARY KEY,
+            promo_code TEXT,
+            discount TEXT,
+            date_start TEXT,
+            date_count TEXT
+        )`
         const order = `CREATE TABLE IF NOT EXISTS order (
             id INTEGER PRIMARY KEY,
-            product_id INTEGER,
             user_id INTEGER,
-            quantity INTEGER,
-            FOREIGN KEY (product_id) REFERENCES product (id),
+            discount TEXT,
+            promo_code TEXT,
+            payment_type INTEGER,
+            delivery_type INTEGER,
+            delivered INTEGER,
+            summ TEXT,
+            date TEXT,
+            completed INTEGER,
+            FOREIGN KEY (promo_code) REFERENCES promo_code (id),
             FOREIGN KEY (user_id) REFERENCES user (id)
         )`
+        const product_order = `CREATE TABLE IF NOT EXISTS product_order (
+            id INTEGER PRIMARY KEY,
+            order_id INTEGER,
+            product_id INTEGER,
+            quantity INTEGER,
+            FOREIGN KEY (order_id) REFERENCES order (id),
+            FOREIGN KEY (product_id) REFERENCES product (id)
+        )`
         this.createTable(user)
-        // this.createTable(cat)
-        // this.createTable(subcat)
-        // this.createTable(product)
-        // this.createTable(order)
+        this.createTable(cat)
+        this.createTable(subcat)
+        this.createTable(product)
+        this.createTable(promo_code)
+        this.createTable(order)
+        this.createTable(product_order)
         
     }
 
