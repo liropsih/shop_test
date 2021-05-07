@@ -8,7 +8,7 @@ class Db {
             id INTEGER PRIMARY KEY,
             login TEXT UNIQUE,
             password TEXT,
-            firstname TEXT,
+            name TEXT,
             lastname TEXT,
             patronymic TEXT,
             email TEXT UNIQUE,

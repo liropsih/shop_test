@@ -22,6 +22,7 @@ const allowCrossDomain = function (req, res, next) {
 app.use(allowCrossDomain)
 
 app.use('/api/auth', require('./routes/auth.routes'))
+
 if (process.env.NODE_ENV === 'production') {
     app.use('/admin', express.static(path.join(__dirname, 'dist', 'admin')))
     app.get('/admin/*', (req, res) => {
@@ -33,8 +34,8 @@ if (process.env.NODE_ENV === 'production') {
     })
 }
 // const router = express.Router()
-
-const PORT = process.env.PORT
+console.log(process.env.NODE_ENV)
+const PORT = process.env.port
 
 // router.use(bodyParser.urlencoded({ extended: false }))
 // router.use(bodyParser.json())

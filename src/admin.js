@@ -2,9 +2,9 @@ import "@/assets/sass/app.scss"
 import Vue from 'vue'
 import Vuelidate from 'vuelidate'
 import VueMeta from 'vue-meta'
-import router from './router'
+import router from '@/router/admin'
 import store from '@/store'
-import App from './App.vue'
+import App from '@/Admin.vue'
 import '@/registerServiceWorker'
 // import axios from 'axios'
 import messagePlugin from '@/utils/message.plugin'
@@ -20,7 +20,7 @@ Vue.use(Vuelidate)
 Vue.use(VueMeta)
 Vue.component('Loader', Loader)
 
-Vue.prototype.$backend = 'http://localhost:3000'
+// Vue.prototype.$backend = 'http://localhost:3000'
 // Vue.prototype.$http = axios
 // const token = localStorage.getItem('token')
 // if (token) {

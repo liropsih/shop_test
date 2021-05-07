@@ -23,7 +23,7 @@ export default {
     actions: {
         async register({ dispatch, commit }, body) {
             try {
-                await useFetch('http://localhost:3000/api/auth/register', 'POST', body)
+                await useFetch('/api/auth/register', 'POST', body)
                 await dispatch('login', body)
             } catch (e) {
                 commit('setError', e.message)
@@ -34,7 +34,7 @@ export default {
 
         async login({ commit }, body) {
             try {
-                const data = await useFetch('http://localhost:3000/api/auth/login', 'POST', body)
+                const data = await useFetch('/api/auth/login', 'POST', body)
                 localStorage.setItem('userData', JSON.stringify({
                     token: data.token,
                     name: data.name,
@@ -55,7 +55,7 @@ export default {
         async tokenVerify({ commit }) {
             try {
                 const body = { token: this.getters.token }
-                await useFetch('http://localhost:3000/api/auth/tokenverify', 'POST', body)
+                await useFetch('/api/auth/tokenverify', 'POST', body)
             } catch (e) {
                 commit('logout')
             }

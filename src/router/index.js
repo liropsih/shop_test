@@ -10,19 +10,19 @@ const routes = [
     path: '/',
     name: 'Home',
     meta: { layout: 'main' },
-    component: () => import('../views/Home.vue')
+    component: () => import('@/views/Home.vue')
   },
   {
     path: '/items',
     name: 'Items',
     meta: { layout: 'main' },
-    component: () => import('../views/Items.vue')
+    component: () => import('@/views/Items.vue')
   },
   {
     path: '/sale',
     name: 'Sale',
     meta: { layout: 'main' },
-    component: () => import('../views/Sale.vue')
+    component: () => import('@/views/Sale.vue')
   },
   {
     path: '/login',
@@ -31,7 +31,7 @@ const routes = [
       layout: 'empty',
       is_guest: true
     },
-    component: () => import('../views/Login.vue')
+    component: () => import('@/views/Login.vue')
   },
   {
     path: '/registration',
@@ -40,7 +40,7 @@ const routes = [
       layout: 'empty',
       is_guest: true
     },
-    component: () => import('../views/Register.vue')
+    component: () => import('@/views/Register.vue')
   },
   {
     path: '/dashboard',
@@ -49,7 +49,7 @@ const routes = [
       layout: 'main',
       is_auth: true
     },
-    component: () => import('../views/Dashboard.vue')
+    component: () => import('@/views/Dashboard.vue')
   }
   // {
   //   path: '/admin',
@@ -59,7 +59,7 @@ const routes = [
   //     is_auth: true,
   //     is_admin: true
   //   },
-  //   component: () => import('../views/Admin.vue')
+  //   component: () => import('@/views/Admin.vue')
   // }
 ]
 

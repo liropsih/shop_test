@@ -6,60 +6,24 @@ import store from '@/store'
 Vue.use(VueRouter)
 
 const routes = [
-  // {
-  //   path: '/',
-  //   name: 'Home',
-  //   meta: { layout: 'main' },
-  //   component: () => import('../views/Home.vue')
-  // },
-  // {
-  //   path: '/items',
-  //   name: 'Items',
-  //   meta: { layout: 'main' },
-  //   component: () => import('../views/Items.vue')
-  // },
-  // {
-  //   path: '/sale',
-  //   name: 'Sale',
-  //   meta: { layout: 'main' },
-  //   component: () => import('../views/Sale.vue')
-  // },
-  // {
-  //   path: '/login',
-  //   name: 'Login',
-  //   meta: {
-  //     layout: 'empty',
-  //     is_guest: true
-  //   },
-  //   component: () => import('../views/Login.vue')
-  // },
-  // {
-  //   path: '/registration',
-  //   name: 'Register',
-  //   meta: {
-  //     layout: 'empty',
-  //     is_guest: true
-  //   },
-  //   component: () => import('../views/Register.vue')
-  // },
-  // {
-  //   path: '/dashboard',
-  //   name: 'Dashboard',
-  //   meta: {
-  //     layout: 'main',
-  //     is_auth: true
-  //   },
-  //   component: () => import('../views/Dashboard.vue')
-  // }
+  {
+    path: '/login',
+    name: 'Login',
+    meta: {
+      layout: 'empty',
+      is_guest: true
+    },
+    component: () => import('@/views/Login.vue')
+  },
   {
     path: '/',
     name: 'Admin',
     meta: {
-      layout: 'main',
+      layout: 'admin',
       // is_auth: true,
       // is_admin: true
     },
-    component: () => import('../views/Admin.vue')
+    component: () => import('@/views/Admin.vue')
   }
 ]
 
