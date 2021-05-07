@@ -68,12 +68,12 @@ class Db {
             FOREIGN KEY (product_id) REFERENCES product (id)
         )`
         this.createTable(user)
-        this.createTable(cat)
-        this.createTable(subcat)
-        this.createTable(product)
-        this.createTable(promo_code)
-        this.createTable(order)
-        this.createTable(product_order)
+        // this.createTable(cat)
+        // this.createTable(subcat)
+        // this.createTable(product)
+        // this.createTable(promo_code)
+        // this.createTable(order)
+        // this.createTable(product_order)
         
     }
 

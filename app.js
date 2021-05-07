@@ -1,6 +1,7 @@
 "use strict"
 const express = require('express')
-const config = require('config')
+// const config = require('config')
+require('dotenv').config()
 const path = require('path')
 const { dirname } = require('path')
 
@@ -22,14 +23,18 @@ app.use(allowCrossDomain)
 
 app.use('/api/auth', require('./routes/auth.routes'))
 if (process.env.NODE_ENV === 'production') {
-    app.use('/', express.static(path.join(__dirname, 'dist')))
+    app.use('/admin', express.static(path.join(__dirname, 'dist', 'admin')))
+    app.get('/admin/*', (req, res) => {
+        res.sendFile(path.resolve(__dirname, 'dist', 'admin', 'index.html'))
+    })
+    app.use('/', express.static(path.join(__dirname, 'dist', 'index')))
     app.get('*', (req, res) => {
-        res.sendFile(path.resolve(__dirname, 'dist', 'index.html'))
+        res.sendFile(path.resolve(__dirname, 'dist', 'index', 'index.html'))
     })
 }
 // const router = express.Router()
 
-const PORT = config.get('port')
+const PORT = process.env.PORT
 
 // router.use(bodyParser.urlencoded({ extended: false }))
 // router.use(bodyParser.json())
@@ -37,5 +42,4 @@ const PORT = config.get('port')
 
 
 // app.use(router)
-
 app.listen(PORT, () => console.log('Express server listening on port ' + PORT))

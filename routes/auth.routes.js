@@ -2,7 +2,8 @@ const { Router } = require('express')
 const router = Router()
 const bcrypt = require('bcrypt')
 // const bcrypt_config = require('./bcrypt.config')
-const config = require('config')
+// const config = require('config')
+require('dotenv').config()
 const jwt = require('jsonwebtoken')
 const { check, validationResult } = require('express-validator')
 
@@ -68,7 +69,7 @@ router.post(
                 }
                 const token = jwt.sign(
                     { uid: user.id },
-                    config.get('jwtSecret'),
+                    process.env.jwtSecret,
                     { expiresIn: '1h' }
                 )
                 if (!!user.permission) {
@@ -84,7 +85,7 @@ router.post(
     })
 router.post('/tokenverify', (req, res) => {
     try {
-        const tokenverify = jwt.verify(req.body.token, config.get('jwtSecret'))
+        const tokenverify = jwt.verify(req.body.token, process.env.jwtSecret)
         if (tokenverify) {
             res.status(201).json({ message: 'Токен подтверждён' })
         }

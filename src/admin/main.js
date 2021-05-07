@@ -1,11 +1,11 @@
-import "./assets/sass/app.scss"
+import "@/assets/sass/app.scss"
 import Vue from 'vue'
 import Vuelidate from 'vuelidate'
 import VueMeta from 'vue-meta'
-import router from '@/router'
+import router from './router'
 import store from '@/store'
-import App from '@/App.vue'
-import './registerServiceWorker'
+import App from './App.vue'
+import '@/registerServiceWorker'
 // import axios from 'axios'
 import messagePlugin from '@/utils/message.plugin'
 // import titlePlugin from '@/utils/title.plugin'
