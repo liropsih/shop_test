@@ -25,6 +25,7 @@ app.use('/api/auth', require('./routes/auth.routes'))
 
 if (process.env.NODE_ENV === 'production') {
     app.use('/admin', express.static(path.join(__dirname, 'dist', 'admin')))
+    // app.use(express.static(path.join(__dirname, '../public')));
     app.get('/admin/*', (req, res) => {
         res.sendFile(path.resolve(__dirname, 'dist', 'admin', 'index.html'))
     })
