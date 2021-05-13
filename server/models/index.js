@@ -6,7 +6,19 @@ const User = sequelize.define(
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     email: { type: DataTypes.STRING, unique: true },
     password: { type: DataTypes.STRING },
-    role: { type: DataTypes.STRING, defaultValue: 'User' }
+    // role: { type: DataTypes.STRING, defaultValue: 'User' }
+    // role: { type: DataTypes.STRING, ref: 'Role' }
+})
+
+const Role = sequelize.define(
+    'role', {
+    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+    value: { type: DataTypes.STRING, unique: true, defaultValue: 'User' }
+})
+
+const UserRole = sequelize.define(
+    'user_role', {
+    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true }
 })
 
 const Cart = sequelize.define(
@@ -61,6 +73,12 @@ const TypeBrand = sequelize.define(
 User.hasOne(Cart)
 Cart.belongsTo(User)
 
+User.hasOne(UserRole)
+UserRole.belongsTo(User)
+
+Role.hasOne(UserRole)
+UserRole.belongsTo(Role)
+
 User.hasMany(Rating)
 Rating.belongsTo(User)
 
@@ -79,7 +97,7 @@ Rating.belongsTo(Item)
 Item.hasMany(CartItem)
 CartItem.belongsTo(Item)
 
-Item.hasMany(ItemInfo, {as: 'info'})
+Item.hasMany(ItemInfo, { as: 'info' })
 ItemInfo.belongsTo(Item)
 
 Item.belongsToMany(Brand, { through: TypeBrand })
@@ -87,6 +105,8 @@ Brand.belongsToMany(Item, { through: TypeBrand })
 
 module.exports = {
     User,
+    Role,
+    UserRole,
     Cart,
     CartItem,
     Item,
