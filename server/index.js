@@ -27,6 +27,7 @@ const start = async () => {
     try {
         await sequelize.authenticate()
         await sequelize.sync()
+        await models.createTableRecords()
         app.listen(PORT, () => console.log('Express server listening on port ' + PORT))
     } catch (e) { console.log(e) }
 }
