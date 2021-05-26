@@ -39,18 +39,20 @@ class ItemController {
             let img
             let fileName
             if (req.files) {
-                img = req.files.img
-                fileName = uuid.v4() + '.jpg'
-                img.mv(path.resolve(__dirname, '..', 'static', 'item', 'img', fileName))
-                // img.mv(path.resolve(__dirname, '..', 'static', 'img', fileName))
-                // imgPath = 'img/' + fileName
-                // const oldImage = item.img.split('img/')[1]
-                // const oldImagePath = path.resolve(__dirname, '..', 'static', 'img', oldImage)
-                const oldImage = item.img
-                const oldImagePath = path.resolve(__dirname, '..', 'static', 'item', 'img', oldImage)
-                unlink(oldImagePath, (err) => {
-                    if (err) throw err
-                  })
+                if (req.files.img) {
+                    img = req.files.img
+                    fileName = uuid.v4() + '.jpg'
+                    img.mv(path.resolve(__dirname, '..', 'static', 'item', 'img', fileName))
+                    // img.mv(path.resolve(__dirname, '..', 'static', 'img', fileName))
+                    // imgPath = 'img/' + fileName
+                    // const oldImage = item.img.split('img/')[1]
+                    // const oldImagePath = path.resolve(__dirname, '..', 'static', 'img', oldImage)
+                    const oldImage = item.img
+                    const oldImagePath = path.resolve(__dirname, '..', 'static', 'item', 'img', oldImage)
+                    unlink(oldImagePath, (err) => {
+                        if (err) throw err
+                    })
+                }
             }
 
             if (info) {
@@ -63,7 +65,7 @@ class ItemController {
                     })
                 )
             }
-            
+
             const newItem = await item.update({ name, price, brandId, catId, img: fileName })
 
             return res.json({ newItem })
@@ -80,7 +82,7 @@ class ItemController {
             const filePath = path.resolve(__dirname, '..', 'static', 'item', 'img', fileName)
             unlink(filePath, (err) => {
                 if (err) throw err
-              })
+            })
             await item.destroy()
             return res.json({ message: 'Товар удалён' })
         } catch (e) {
