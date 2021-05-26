@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken')
-const requestController = require('../controllers/requestController')
-const ApiError = require('../error/api.error')
+const requestController = require('@@/controllers/requestController')
+const ApiError = require('@@/error/api.error')
 
 module.exports = function () {
     return async function (req, res, next) {

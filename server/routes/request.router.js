@@ -1,7 +1,7 @@
 const Router = require('express')
 const router = new Router()
-const requestController = require('../controllers/requestController')
-const roleMiddleware = require('../middleware/role.middleware')
+const requestController = require('@@/controllers/requestController')
+const roleMiddleware = require('@@/middleware/role.middleware')
 
 router.get('/', roleMiddleware(), requestController.getAll)
 router.post('/add', roleMiddleware(), requestController.create)

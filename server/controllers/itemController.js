@@ -2,6 +2,7 @@ const { Item, ItemInfo } = require('../models')
 const ApiError = require('../error/api.error')
 const uuid = require('uuid')
 const path = require('path')
+const imgFolder = path.resolve(__dirname, '../static/item/img')
 const { unlink } = require('fs')
 
 class ItemController {
@@ -10,7 +11,7 @@ class ItemController {
             let { name, price, brandId, catId, info } = req.body
             const { img } = req.files
             let fileName = uuid.v4() + '.jpg'
-            img.mv(path.resolve(__dirname, '../static/item/img', fileName))
+            img.mv(path.resolve(imgFolder, fileName))
             const item = await Item.create({ name, price, brandId, catId, img: fileName })
 
             if (info) {
@@ -40,9 +41,9 @@ class ItemController {
                 if (req.files.img) {
                     img = req.files.img
                     fileName = uuid.v4() + '.jpg'
-                    img.mv(path.resolve(__dirname, '../static/item/img', fileName))
+                    img.mv(path.resolve(imgFolder, fileName))
                     const oldImage = item.img
-                    const oldImagePath = path.resolve(__dirname, '../static/item/img', oldImage)
+                    const oldImagePath = path.resolve(imgFolder, oldImage)
                     unlink(oldImagePath, (err) => {
                         if (err) throw err
                     })
@@ -74,7 +75,7 @@ class ItemController {
             let { id } = req.body
             const item = await Item.findByPk(id)
             const fileName = item.img
-            const filePath = path.resolve(__dirname, '../static/item/img', fileName)
+            const filePath = path.resolve(imgFolder, fileName)
             unlink(filePath, (err) => {
                 if (err) throw err
             })

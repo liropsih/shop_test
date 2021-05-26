@@ -1,5 +1,5 @@
-const { Cat } = require('../models')
-const ApiError = require('../error/api.error')
+const { Cat } = require('@@/models')
+const ApiError = require('@@/error/api.error')
 
 class CatController {
     async create(req, res, next) {
