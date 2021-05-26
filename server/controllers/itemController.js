@@ -37,10 +37,10 @@ class ItemController {
             let { id, name, price, brandId, catId, info } = req.body
             const item = await Item.findByPk(id)
             let img
-            let imgPath
+            let fileName
             if (req.files) {
                 img = req.files.img
-                let fileName = uuid.v4() + '.jpg'
+                fileName = uuid.v4() + '.jpg'
                 img.mv(path.resolve(__dirname, '..', 'static', 'item', 'img', fileName))
                 // img.mv(path.resolve(__dirname, '..', 'static', 'img', fileName))
                 // imgPath = 'img/' + fileName
@@ -64,7 +64,7 @@ class ItemController {
                 )
             }
             
-            const newItem = await item.update({ name, price, brandId, catId, img: imgPath })
+            const newItem = await item.update({ name, price, brandId, catId, img: fileName })
 
             return res.json({ newItem })
         } catch (e) {
@@ -74,7 +74,7 @@ class ItemController {
 
     async destroy(req, res, next) {
         try {
-            let { id, name, price, brandId, catId, info } = req.body
+            let { id } = req.body
             const item = await Item.findByPk(id)
             const fileName = item.img
             const filePath = path.resolve(__dirname, '..', 'static', 'item', 'img', fileName)
