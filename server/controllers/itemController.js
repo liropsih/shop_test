@@ -2,8 +2,8 @@ const { Item, ItemInfo } = require('@@/models')
 const ApiError = require('@@/error/api.error')
 const uuid = require('uuid')
 const path = require('path')
+const { unlinkSync } = require('fs')
 const imgFolder = path.resolve(__dirname, '../static/item/img')
-const { unlink } = require('fs')
 
 class ItemController {
     async create(req, res, next) {
@@ -44,9 +44,7 @@ class ItemController {
                     img.mv(path.resolve(imgFolder, fileName))
                     const oldImage = item.img
                     const oldImagePath = path.resolve(imgFolder, oldImage)
-                    unlink(oldImagePath, (err) => {
-                        if (err) throw err
-                    })
+                    unlinkSync(oldImagePath)
                 }
             }
 
@@ -76,9 +74,7 @@ class ItemController {
             const item = await Item.findByPk(id)
             const fileName = item.img
             const filePath = path.resolve(imgFolder, fileName)
-            unlink(filePath, (err) => {
-                if (err) throw err
-            })
+            unlinkSync(filePath)
             await item.destroy()
             return res.json({ message: 'Товар удалён' })
         } catch (e) {
