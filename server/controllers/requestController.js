@@ -65,12 +65,12 @@ class RequestController {
 
     async requestRoleAdd(req, res, next) {
         try {
-            const { id, role } = req.body
+            const { id, roleId } = req.body
             const request = await Request.findByPk(id)
             if (!request) {
                 return next(ApiError.badRequest('Запрос не найден'))
             }
-            const roles = await request.addRoles(role)
+            const roles = await request.addRoles(roleId)
             const message = !roles
                 ? 'Нет изменений'
                 : ((roles > 1)
@@ -85,12 +85,12 @@ class RequestController {
 
     async requestRoleRemove(req, res, next) {
         try {
-            const { id, role } = req.body
+            const { id, roleId } = req.body
             const request = await Request.findByPk(id)
             if (!request) {
                 return next(ApiError.badRequest('Запрос не найден'))
             }
-            const roles = await request.removeRoles(role)
+            const roles = await request.removeRoles(roleId)
             const message = !roles
                 ? 'Нет изменений'
                 : ((roles > 1)

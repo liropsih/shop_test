@@ -15,8 +15,8 @@ const User = sequelize.define(
 
 const Role = sequelize.define(
     'role', {
-    id: { type: DataTypes.INTEGER, autoIncrement: true },
-    value: { type: DataTypes.STRING, primaryKey: true, unique: true, allowNull: false }
+    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+    value: { type: DataTypes.STRING, unique: true, allowNull: false }
 },
     { timestamps: false }
 )
@@ -91,25 +91,13 @@ const CatBrand = sequelize.define(
 User.hasOne(Cart)
 Cart.belongsTo(User)
 
-User.belongsToMany(Role, {
-    through: UserRole,
-    sourceKey: 'email',
-})
+User.belongsToMany(Role, { through: UserRole })
 
-Role.belongsToMany(User, {
-    through: UserRole,
-    targetKey: 'email'
-})
+Role.belongsToMany(User, { through: UserRole })
 
-Request.belongsToMany(Role, {
-    through: RequestRole,
-    sourceKey: 'value'
-})
+Request.belongsToMany(Role, { through: RequestRole })
 
-Role.belongsToMany(Request, {
-    through: RequestRole,
-    targetKey: 'value'
-})
+Role.belongsToMany(Request, { through: RequestRole })
 
 User.hasMany(Rating)
 Rating.belongsTo(User)
@@ -165,9 +153,10 @@ async function createTableRecords() {
     await createTabRec(Role, 'User')
     await createTabRec(Role, 'Admin')
     let user = await User.findOne({ where: { email: 'aa@aa.aa' } })
+    let adminRole = await Role.findOne({ where: { value: 'Admin' } })
     if (!user) {
         user = await User.create({ email: 'aa@aa.aa', password: '$2b$05$EjKH9/mDP5RojK34aAXrMus6CWU/.FLu92WuO4.Nn489R6Bspvy3S' })
-        await user.addRole('Admin')
+        await user.addRole(adminRole)
     }
 
     await createCat('Смартфоны и гаджеты') // 1
@@ -200,8 +189,8 @@ async function createTableRecords() {
     await createCat('Посудомоечные машины', 5)
     await createCat('Пылесосы', 5)
 
-    await Brand.findOrCreate({where:{name: 'Samsung'}})
-    await Brand.findOrCreate({where:{name: 'Apple'}})
+    await Brand.findOrCreate({ where: { name: 'Samsung' } })
+    await Brand.findOrCreate({ where: { name: 'Apple' } })
 }
 
 module.exports = {

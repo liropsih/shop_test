@@ -24,7 +24,8 @@ class UserController {
             }
             const hashPassword = await bcrypt.hash(password, 5)
             const user = await User.create({ email, password: hashPassword })
-            const role = await user.addRoles(['User'])
+            let role = await Role.findOne({ where: { value: 'User' } })
+            role = await user.addRoles([role])
             const roles = role.map(role => role.roleValue)
             await Cart.create({ userId: user.id })
             const token = generateJwt(user.id, user.email, roles)
@@ -120,12 +121,12 @@ class UserController {
 
     async userRoleAdd(req, res, next) {
         try {
-            const { email, role } = req.body
+            const { email, roleId } = req.body
             const user = await User.findOne({ where: { email } })
             if (!user) {
                 return next(ApiError.badRequest('Пользователь с таким email не существует'))
             }
-            const roles = await user.addRoles(role)
+            const roles = await user.addRoles(roleId)
             const message = !roles
                 ? 'Нет изменений'
                 : ((roles > 1)
@@ -140,12 +141,12 @@ class UserController {
 
     async userRoleRemove(req, res, next) {
         try {
-            const { email, role } = req.body
+            const { email, roleId } = req.body
             const user = await User.findOne({ where: { email } })
             if (!user) {
                 return next(ApiError.badRequest('Пользователь с таким email не существует'))
             }
-            const roles = await user.removeRoles(role)
+            const roles = await user.removeRoles(roleId)
             const message = !roles
                 ? 'Нет изменений'
                 : ((roles > 1)
