@@ -52,7 +52,7 @@ class ItemController {
                 info = JSON.parse(info)
                 let findedItem
                 info.forEaech(i =>
-                    findedItem = ItemInfo.findOne({where: {itemId: item.id}}),
+                    findedItem = ItemInfo.findOne({ where: { itemId: item.id } }),
                     findedItem.update({
                         title: i.title,
                         description: i.description
