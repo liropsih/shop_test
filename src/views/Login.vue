@@ -72,8 +72,7 @@
 
 <script>
 import { email, required, minLength } from 'vuelidate/lib/validators'
-import messages from '../utils/messages'
-
+import messages from '@/utils/messages'
 export default {
   //   metaInfo () {
   //     return {
@@ -106,32 +105,8 @@ export default {
       }
 
       try {
-        //await this.$store.dispatch('login', formData)
-        this.$http.post('http://localhost:3000/login', formData)
-          .then(response => {
-            let is_admin = response.data.user.is_admin
-            localStorage.setItem('user', JSON.stringify(response.data.user))
-            localStorage.setItem('jwt', response.data.token)
-
-            if (localStorage.getItem('jwt') != null) {
-              this.$emit('loggedIn')
-              if (this.$route.params.nextUrl != null) {
-                this.$router.push(this.$route.params.nextUrl)
-              }
-              else {
-                if (is_admin == 1) {
-                  this.$router.push('/admin')
-                }
-                else {
-                  this.$router.push('/dashboard')
-                }
-              }
-            }
-          })
-          .catch(function (error) {
-            console.error(error.response);
-          })
-        // this.$router.push('/')
+        await this.$store.dispatch('login', formData)
+        this.$router.push('/dashboard')
       } catch (e) { }
     }
   }

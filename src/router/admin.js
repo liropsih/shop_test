@@ -7,24 +7,6 @@ Vue.use(VueRouter)
 
 const routes = [
   {
-    path: '/',
-    name: 'Home',
-    meta: { layout: 'main' },
-    component: () => import('@/views/Home.vue')
-  },
-  {
-    path: '/items',
-    name: 'Items',
-    meta: { layout: 'main' },
-    component: () => import('@/views/Items.vue')
-  },
-  {
-    path: '/sale',
-    name: 'Sale',
-    meta: { layout: 'main' },
-    component: () => import('@/views/Sale.vue')
-  },
-  {
     path: '/login',
     name: 'Login',
     meta: {
@@ -34,38 +16,20 @@ const routes = [
     component: () => import('@/views/Login.vue')
   },
   {
-    path: '/registration',
-    name: 'Register',
+    path: '/',
+    name: 'Admin',
     meta: {
-      layout: 'empty',
-      is_guest: true
+      layout: 'admin',
+      // is_auth: true,
+      // is_admin: true
     },
-    component: () => import('@/views/Register.vue')
-  },
-  {
-    path: '/dashboard',
-    name: 'Dashboard',
-    meta: {
-      layout: 'main',
-      is_auth: true
-    },
-    component: () => import('@/views/Dashboard.vue')
+    component: () => import('@/views/Admin.vue')
   }
-  // {
-  //   path: '/admin',
-  //   name: 'Admin',
-  //   meta: {
-  //     layout: 'main',
-  //     is_auth: true,
-  //     is_admin: true
-  //   },
-  //   component: () => import('@/views/Admin.vue')
-  // }
 ]
 
 const router = new VueRouter({
   mode: 'history',
-  base: process.env.BASE_URL,
+  base: process.env.BASE_URL + 'admin',
   routes
 })
 

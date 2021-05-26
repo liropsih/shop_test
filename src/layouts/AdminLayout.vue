@@ -15,12 +15,11 @@
 </template>
 
 <script>
-import Navbar from "@/components/app/Navbar"
-import Sidebar from "@/components/app/Sidebar"
-import Footer from "@/components/app/Footer"
+import Navbar from "@/components/admin/Navbar"
+import Sidebar from "@/components/admin/Sidebar"
 import messages from '@/utils/messages'
 export default {
-  name: "main-layout",
+  name: "admin-layout",
   data: () => ({
     loading: true
   }),
@@ -33,7 +32,7 @@ export default {
       this.$message(messages[this.$route.query.message])
     }
   },
-  components: { Navbar, Sidebar, Footer },
+  components: { Navbar, Sidebar },
   computed: {
     error() {
       return this.$store.getters.error
