@@ -1,5 +1,5 @@
-const { Item, ItemInfo } = require('../models')
-const ApiError = require('../error/api.error')
+const { Item, ItemInfo } = require('@@/models')
+const ApiError = require('@@/error/api.error')
 const uuid = require('uuid')
 const path = require('path')
 const imgFolder = path.resolve(__dirname, '../static/item/img')
