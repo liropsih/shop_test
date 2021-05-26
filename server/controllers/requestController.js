@@ -1,5 +1,5 @@
-const ApiError = require('../error/api.error')
 const { Request, Role } = require('../models')
+const ApiError = require('../error/api.error')
 
 class RequestController {
     async create(req, res, next) {
