@@ -68,6 +68,22 @@ class ItemController {
         }
     }
 
+    async destroy(req, res, next) {
+        try {
+            let { id, name, price, brandId, catId, info } = req.body
+            const item = await Item.findByPk(id)
+            const img = item.img.split('img/')[1]
+            const imgPath = path.resolve(__dirname, '..', 'static', 'img', oldImage)
+            unlink(imgPath, (err) => {
+                if (err) throw err
+              })
+            await item.destroy()
+            return res.json({ message: 'Товар удалён' })
+        } catch (e) {
+            next(ApiError.internal(e.message))
+        }
+    }
+
     async getAll(req, res) {
         let { brandId, catId, limit, page } = req.query
         page = page || 1
