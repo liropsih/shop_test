@@ -5,9 +5,7 @@
       "baseUrl": "./",
       "paths": {
           "@/*": ["./src/*"],
-          "@@/*": ["./server/*"],
-          "@client/*": ["./dist/client/*"],
-          "@admin/*": ["./dist/admin/*"]
+          "@@/*": ["./server/*"]
       }
     },
     "exclude": ["dist, node_modules"]

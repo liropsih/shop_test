@@ -52,8 +52,6 @@
     "not dead"
   ],
   "_moduleAliases": {
-    "@@": "./server",
-    "@client": "./dist/client",
-    "@admin": "./dist/admin"
+    "@@": "./server"
   }
 }
