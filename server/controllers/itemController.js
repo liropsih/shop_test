@@ -2,6 +2,7 @@ const uuid = require('uuid')
 const path = require('path')
 const { Item, ItemInfo } = require('../models')
 const ApiError = require('../error/api.error')
+const { unlink } = require('fs')
 
 class ItemController {
     async create(req, res, next) {
@@ -10,7 +11,8 @@ class ItemController {
             const { img } = req.files
             let fileName = uuid.v4() + '.jpg'
             img.mv(path.resolve(__dirname, '..', 'static', 'img', fileName))
-            const item = await Item.create({ name, price, brandId, catId, img: 'img/' + fileName })
+            const imgPath = 'img/' + fileName
+            const item = await Item.create({ name, price, brandId, catId, img: imgPath })
 
             if (info) {
                 info = JSON.parse(info)
@@ -24,6 +26,43 @@ class ItemController {
             }
 
             return res.json({ item })
+        } catch (e) {
+            next(ApiError.internal(e.message))
+        }
+    }
+
+    async update(req, res, next) {
+        try {
+            let { id, name, price, brandId, catId, info } = req.body
+            const item = await Item.findByPk(id)
+            let img
+            let imgPath
+            if (req.files) {
+                img = req.files.img
+                let fileName = uuid.v4() + '.jpg'
+                img.mv(path.resolve(__dirname, '..', 'static', 'img', fileName))
+                imgPath = 'img/' + fileName
+                const oldImage = item.img.split('img/')[1]
+                const oldImagePath = path.resolve(__dirname, '..', 'static', 'img', oldImage)
+                unlink(oldImagePath, (err) => {
+                    if (err) throw err
+                  })
+            }
+
+            if (info) {
+                info = JSON.parse(info)
+                info.forEaech(i =>
+                    ItemInfo.create({
+                        title: i.title,
+                        description: i.description,
+                        itemId: item.id
+                    })
+                )
+            }
+            
+            const newItem = await item.update({ name, price, brandId, catId, img: imgPath })
+
+            return res.json({ newItem })
         } catch (e) {
             next(ApiError.internal(e.message))
         }

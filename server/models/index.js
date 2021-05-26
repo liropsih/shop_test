@@ -199,6 +199,9 @@ async function createTableRecords() {
     await createCat('Стиральные машины', 5)
     await createCat('Посудомоечные машины', 5)
     await createCat('Пылесосы', 5)
+
+    await Brand.findOrCreate({where:{name: 'Samsung'}})
+    await Brand.findOrCreate({where:{name: 'Apple'}})
 }
 
 module.exports = {
