@@ -1,5 +1,4 @@
 require('dotenv').config()
-require('module-alias/register')
 const express = require('express')
 const sequelize = require('./database')
 const models = require('./models')

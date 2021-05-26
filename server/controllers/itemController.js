@@ -49,16 +49,16 @@ class ItemController {
                 }
             }
 
-            if (info) {
-                info = JSON.parse(info)
-                info.forEaech(i =>
-                    ItemInfo.create({
-                        title: i.title,
-                        description: i.description,
-                        itemId: item.id
-                    })
-                )
-            }
+            // if (info) {
+            //     info = JSON.parse(info)
+            //     info.forEaech(i =>
+            //         ItemInfo.create({
+            //             title: i.title,
+            //             description: i.description,
+            //             itemId: item.id
+            //         })
+            //     )
+            // }
 
             const newItem = await item.update({ name, price, brandId, catId, img: fileName })
 
