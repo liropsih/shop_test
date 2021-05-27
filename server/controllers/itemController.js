@@ -3,14 +3,20 @@ const ApiError = require('@@/error/api.error')
 const uuid = require('uuid')
 const path = require('path')
 const { unlinkSync } = require('fs')
-const imgFolder = path.resolve(__dirname, '../static/item/img')
+const imgFolder = path.resolve(__dirname, '..', 'static', 'item', 'img')
 
 class ItemController {
     async create(req, res, next) {
         try {
             let { name, price, brandId, catId, info } = req.body
             const { img } = req.files
-            let fileName = uuid.v4() + '.jpg'
+            if (img.size > (2 * 1024 * 1024)) {
+                return next(ApiError.badRequest('Размер изображения превышает 2мб'))
+            }
+            if (img.mimetype != 'image/jpeg' && img.mimetype != 'image/png') {
+                return next(ApiError.badRequest('Неверный формат изображения'))
+            }
+            const fileName = uuid.v4() + path.extname(img.name).toLowerCase()
             img.mv(path.resolve(imgFolder, fileName))
             const item = await Item.create({ name, price, brandId, catId, img: fileName })
 
@@ -38,14 +44,18 @@ class ItemController {
             let img
             let fileName
             if (req.files) {
-                if (req.files.img) {
-                    img = req.files.img
-                    fileName = uuid.v4() + '.jpg'
-                    img.mv(path.resolve(imgFolder, fileName))
-                    const oldImage = item.img
-                    const oldImagePath = path.resolve(imgFolder, oldImage)
-                    unlinkSync(oldImagePath)
+                img = req.files.img
+                if (img.size > (2 * 1024 * 1024)) {
+                    return next(ApiError.badRequest('Размер изображения превышает 2мб'))
                 }
+                if (img.mimetype != 'image/jpeg' && img.mimetype != 'image/png') {
+                    return next(ApiError.badRequest('Неверный формат изображения'))
+                }
+                const fileName = uuid.v4() + path.extname(img.name).toLowerCase()
+                img.mv(path.resolve(imgFolder, fileName))
+                const oldImage = item.img
+                const oldImagePath = path.resolve(imgFolder, oldImage)
+                unlinkSync(oldImagePath)
             }
 
             if (info) {

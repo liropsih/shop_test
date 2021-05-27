@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken')
 const requestController = require('@@/controllers/requestController')
-const ApiError = require('@@/error/api.error')
+const path = require('path')
 
 module.exports = async function (req, res, next) {
     if (req.method === 'OPTIONS') {
@@ -9,7 +9,7 @@ module.exports = async function (req, res, next) {
     try {
         let token = req.headers.authorization
         if (!token) {
-            next(ApiError.unauthorized('Пользователь не авторизован'))
+            return res.sendFile(path.resolve(process.cwd(), 'dist', 'error', '401.html'))
         }
         token = token.split(' ')[1] // Bearer token
         const decoded = jwt.verify(token, process.env.SECRET_KEY)
@@ -21,11 +21,11 @@ module.exports = async function (req, res, next) {
             }
         })
         if (!hasRole) {
-            next(ApiError.forbidden('Нет доступа'))
+            return res.sendFile(path.resolve(process.cwd(), 'dist', 'error', '403.html'))
         }
         req.user = decoded
         next()
     } catch (e) {
-        next(ApiError.internal(e.message))
+        return res.sendFile(path.resolve(process.cwd(), 'dist', 'error', '500.html'))
     }
 }

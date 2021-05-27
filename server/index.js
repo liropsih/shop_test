@@ -6,6 +6,7 @@ const models = require('./models')
 const cors = require('cors')
 const fileUpload = require('express-fileupload')
 const router = require('./routes')
+const roleFrontendMiddleware = require('@@/middleware/roleFrontend.middleware')
 const errorHandler = require('./middleware/error.middleware')
 const path = require('path')
 
@@ -14,18 +15,18 @@ const PORT = process.env.port || 3000
 const app = express()
 app.use(cors())
 app.use(express.json())
-app.use(express.static(path.resolve(__dirname, 'static/item/img')))
+app.use(express.static(path.resolve(__dirname, 'static', 'item', 'img')))
 app.use(fileUpload({}))
 app.use('/api', router)
 
 if (process.env.NODE_ENV === 'production') {
-    app.use('/admin', express.static(path.join(process.cwd(), '/dist/admin')))
-    app.get('/admin/*', (req, res) => {
-        res.sendFile(path.resolve(process.cwd(), '/dist/admin/index.html'))
+    app.use('/admin', roleFrontendMiddleware, express.static(path.resolve(process.cwd(), 'dist', 'admin')))
+    app.get('/admin/*', roleFrontendMiddleware, (req, res) => {
+        res.sendFile(path.resolve(process.cwd(), 'dist', 'admin', 'index.html'))
     })
-    app.use('/', express.static(path.join(process.cwd(), '/dist/client')))
+    app.use('/', express.static(path.resolve(process.cwd(), 'dist', 'client')))
     app.get('*', (req, res) => {
-        res.sendFile(path.resolve(process.cwd(), '/dist/client/index.html'))
+        res.sendFile(path.resolve(process.cwd(), 'dist', 'client', 'index.html'))
     })
 }
 
