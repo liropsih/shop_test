@@ -8,6 +8,7 @@ const roleMiddleware = require('@@/middleware/role.middleware')
 router.post(
     '/register',
     [
+        check('name', 'Некорректно введено имя').isLength({ min: 2 }).trim().escape(),
         check('email', 'Некорректный email').isEmail(),
         check('password', 'Минимальная длина пароля 6 символов').isLength({ min: 6 })
     ],
@@ -38,7 +39,6 @@ router.get('/info', authMiddleware, userController.getUserInfo)
 router.post(
     '/update_info',
     [
-        check('name', 'Некорректно введено имя').isLength({ min: 2 }).trim().escape(),
         check('lastname', 'Некорректно введена фамилия').isLength({ min: 2 }).trim().escape(),
         check('patronymic', 'Некорректно введено отчество').isLength({ min: 2 }).trim().escape(),
         check('phone', 'Некорректно введена фамилия').isMobilePhone(),

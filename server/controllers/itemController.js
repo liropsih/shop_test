@@ -51,7 +51,7 @@ class ItemController {
                 if (img.mimetype != 'image/jpeg' && img.mimetype != 'image/png') {
                     return next(ApiError.badRequest('Неверный формат изображения'))
                 }
-                const fileName = uuid.v4() + path.extname(img.name).toLowerCase()
+                fileName = uuid.v4() + path.extname(img.name).toLowerCase()
                 img.mv(path.resolve(imgFolder, fileName))
                 const oldImage = item.img
                 const oldImagePath = path.resolve(imgFolder, oldImage)

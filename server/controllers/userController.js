@@ -4,9 +4,9 @@ const ApiError = require('@@/error/api.error')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 
-const generateJwt = (id, email, roles) => {
+const generateJwt = (id, name, roles) => {
     return jwt.sign(
-        { id, email, roles },
+        { id, name, roles },
         process.env.SECRET_KEY,
         { expiresIn: '24h' }
     )
@@ -20,7 +20,7 @@ class UserController {
                 const message = errors.array({}).map(e => e.msg)
                 return next(ApiError.badRequest(message))
             }
-            const { email, password } = req.body
+            const { name, email, password } = req.body
             // if (!email || !password) {
             //     return next(ApiError.badRequest('Некорректный email или пароль'))
             // }
@@ -29,13 +29,13 @@ class UserController {
                 return next(ApiError.badRequest('Пользователь с таким email уже существует'))
             }
             const hashPassword = await bcrypt.hash(password, 5)
-            const user = await User.create({ email, password: hashPassword })
+            const user = await User.create({ name, email, password: hashPassword })
             await Cart.create({ userId: user.id })
             const role = await Role.findOne({ where: { value: 'User' } })
             await user.addRoles([role])
             // const roles = role.map(role => role.roleId')
             const roles = (await user.getRoles()).map(role => role.value)
-            const token = generateJwt(user.id, user.email, roles)
+            const token = generateJwt(user.id, user.name, roles)
             return res.json(token)
         } catch (e) {
             next(ApiError.internal(e.message))
@@ -63,7 +63,7 @@ class UserController {
                 return next(ApiError.badRequest('Неверный пароль'))
             }
             const roles = user.roles.map(role => role.value)
-            const token = generateJwt(user.id, user.email, roles)
+            const token = generateJwt(user.id, user.name, roles)
             return res.json(token)
         } catch (e) {
             next(ApiError.internal(e.message))
@@ -105,7 +105,7 @@ class UserController {
             const hashPassword = await bcrypt.hash(newPassword, 5)
             user = await user.update({ password: hashPassword })
             const roles = user.roles.map(role => role.value)
-            const token = generateJwt(user.id, user.email, roles)
+            const token = generateJwt(user.id, user.name, roles)
             return res.json(token)
         } catch (e) {
             next(ApiError.internal(e.message))

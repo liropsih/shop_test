@@ -55,32 +55,47 @@
 
 // SideNav
 .sidenav {
-    transition: all 0.2s;
+    transition: all 0.25s;
     top: initial;
     z-index: 990;
 
     .sideNavClose:hover {
         background-color: initial !important;
     }
-    .router-link > i {
-        width: 2rem;
-        font-size: 1.6rem;
-        display: inline-block;
-        text-align: center;
-        margin-right: 1rem;
+    // .router-link > i {
+    //     width: 2rem;
+    //     font-size: 1.6rem;
+    //     display: inline-block;
+    //     text-align: center;
+    //     margin-right: 1rem;
+    // }
+    .sidenav-collapsible > li > .collapsible-body {
+        display: none !important;
     }
-    li.active > .collapsible-header > span {
-        transform: rotate(0.25turn);
-    }
-    .collapsible-header span {
-        vertical-align: middle;
-        transition: all 0.25s;
-    }
-    .collapsible-body {
-        margin-left: 3%;
-
+    .collapsible {
+        li.active,
+        li.open {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+        li.active > .collapsible-header > span,
+        li.open > .collapsible-header > span {
+            transform: rotate(0.25turn);
+        }
+        li.active > .collapsible-body,
+        li.open > .collapsible-body {
+            display: block !important;
+        }
+        .collapsible-header span {
+            vertical-align: middle;
+            transition: all 0.25s;
+        }
         .collapsible-body {
+            // display: none !important;
             margin-left: 3%;
+
+            .collapsible-body {
+                margin-left: 3%;
+            }
         }
     }
 }
@@ -132,14 +147,15 @@ main {
 
         img {
             display: block;
-            width: 100%;
+            // width: 100%;
             max-width: 100%;
+            width: 300px;
             border: 0;
             user-drag: none;
             -moz-user-select: none;
             -webkit-user-drag: none;
-            // height: 336px;
-            height: 33%;
+            height: 336px;
+            // height: 33%;
             object-fit: cover;
         }
 

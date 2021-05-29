@@ -1,7 +1,7 @@
 <template>
   <form class="card auth-card" @submit.prevent="login">
     <div class="card-content">
-      <span class="card-title">Laravel Test Shop</span>
+      <span class="card-title">NodeJS + VUE - Test Shop</span>
       <div class="input-field">
         <input
           id="email"

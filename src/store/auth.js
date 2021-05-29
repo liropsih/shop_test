@@ -1,30 +1,38 @@
 // import axios from 'axios'
 
 import { useFetch } from '@/functions/useFetch.function'
+import { decode } from 'jsonwebtoken'
 const userData = JSON.parse(localStorage.getItem('userData')) || {}
 
 export default {
     state: {
         token: userData.token || null,
         name: userData.name || null,
-        status: userData.status || null
+        roles: userData.roles || null
     },
     mutations: {
-        login(state, data) {
-            state.token = data.token
-            state.name = data.name
-            state.status = data.status || null
+        login(state, token) {
+            state.token = token
+            state.name = decode(token).name
+            state.roles = decode(token).roles
         },
         logout(state) {
             state.token = null
+            state.name = null
+            state.roles = null
             localStorage.removeItem('userData')
         }
     },
     actions: {
         async register({ dispatch, commit }, body) {
             try {
-                await useFetch('/api/auth/register', 'POST', body)
-                await dispatch('login', body)
+                const token = await useFetch('/api/user/register', 'POST', body)
+                localStorage.setItem('userData', JSON.stringify({
+                    token,
+                    name: decode(token).name,
+                    roles: decode(token).roles
+                }))
+                commit('login', token)
             } catch (e) {
                 commit('setError', e.message)
                 setTimeout(() => commit('clearError'), 200)
@@ -34,13 +42,13 @@ export default {
 
         async login({ commit }, body) {
             try {
-                const data = await useFetch('/api/auth/login', 'POST', body)
+                const token = await useFetch('/api/user/login', 'POST', body)
                 localStorage.setItem('userData', JSON.stringify({
-                    token: data.token,
-                    name: data.name,
-                    status: data.status
+                    token,
+                    name: decode(token).name,
+                    roles: decode(token).roles
                 }))
-                commit('login', data)
+                commit('login', token)
             } catch (e) {
                 commit('setError', e.message)
                 setTimeout(() => commit('clearError'), 200)
@@ -54,10 +62,10 @@ export default {
 
         async tokenVerify({ commit }) {
             try {
-                const body = { token: this.getters.token }
-                await useFetch('/api/auth/tokenverify', 'POST', body)
+                // const body = { token: this.getters.token }
+                // await useFetch('/api/user/auth')
             } catch (e) {
-                commit('logout')
+                // commit('logout')
             }
         }
 
@@ -123,6 +131,6 @@ export default {
         isLoggedIn: s => !!s.token,
         username: s => s.name,
         token: s => s.token,
-        status: s => s.status
+        roles: s => s.roles
     }
 }

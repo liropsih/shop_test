@@ -1,4 +1,6 @@
 import "@/assets/sass/app.scss"
+import dotenv  from "dotenv"
+dotenv.config()
 import Vue from 'vue'
 import Vuelidate from 'vuelidate'
 import VueMeta from 'vue-meta'

@@ -53,6 +53,9 @@ const Item = sequelize.define(
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     name: { type: DataTypes.STRING, unique: true, allowNull: false },
     price: { type: DataTypes.INTEGER, allowNull: false },
+    oldPrice: { type: DataTypes.INTEGER },
+    sale: { type: DataTypes.BOOLEAN, defaultValue: 'false' },
+    tag: { type: DataTypes.STRING, defaultValue: 'SALE', allowNull: false },
     rating: { type: DataTypes.INTEGER, defaultValue: '0' },
     img: { type: DataTypes.STRING, allowNull: false }
 })
