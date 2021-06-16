@@ -12,6 +12,7 @@
 
 <script>
 import $axios from '@/http'
+import { mapActions } from 'vuex'
 
 export default {
   data: () => ({
@@ -28,8 +29,8 @@ export default {
         await this.getItems(value)
       }
     },
-    async selectedItem(name) {
-      await this.goToItem(name)
+    selectedItem(name) {
+      this.goToItem(name)
     }
   },
   mounted() {
@@ -45,21 +46,20 @@ export default {
     this.autocomplete = M.Autocomplete.getInstance(this.$refs.search)
   },
   methods: {
+    ...mapActions('setError'),
     async getItems(value) {
       try {
         const { limit } = this.autocomplete.options
         const { data } = await $axios.get(`/api/item/search?name=${value}&limit=${limit}`)
         this.acItems = data.rows
         data.rows.forEach(item => {
-          this.acDropdown[item.name] = this.production ? item.img : 'http://localhost:3000/' + item.img
+          this.acDropdown[item.name] = process.env.VUE_APP_API_URL + item.img
         })
-        return
       } catch (e) {
-        throw e
+        this.setError(e)
       }
     },
-    async goToItem(name) {
-      try {
+    goToItem(name) {
         let id
         this.acItems.forEach(item => {
           if (item.name = name) { id = item.id }
@@ -69,10 +69,6 @@ export default {
         // })
         // var result1 = sample.filter(item => item.name == name)
         this.$router.push(`/item/${id}`)
-        return
-      } catch (e) {
-        throw e
-      }
     },
     searchHandler() {
       this.$router.push(`/search?val=${this.searchValue}`)

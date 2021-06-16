@@ -99,6 +99,7 @@
 <script>
 import messages from '@/utils/messages'
 import { email, required, minLength } from 'vuelidate/lib/validators'
+import { mapActions } from 'vuex'
 
 export default {
   //   metaInfo () {
@@ -126,6 +127,7 @@ export default {
     }
   },
   methods: {
+    ...mapActions(['register']),
     async register() {
       if (this.$v.$invalid) {
         this.$v.$touch()
@@ -137,7 +139,7 @@ export default {
         password: this.password
       }
       try {
-        await this.$store.dispatch('register', data)
+        await this.register(data)
         this.$router.push('/profile')
       } catch (e) { }
     }

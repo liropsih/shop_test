@@ -147,7 +147,7 @@ class UserController {
                 include: Role
             })
             if (oldPassword && newPassword) {
-                await changePassword(user, oldPassword, newPassword)
+                await changePassword(user, oldPassword, newPassword, next)
             }
             await user.update({ name, lastname, patronymic, email, phone, birthdate })
             return res.json({ message: 'Данные успешно сохранены' })

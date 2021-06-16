@@ -2,7 +2,6 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import auth from './auth'
 import items from './items'
-import brands from './brands'
 import filters from './filters'
 import cart from './cart'
 
@@ -25,7 +24,11 @@ export default new Vuex.Store({
     }
   },
   actions: {
-    SidenavTrigger({commit}) {
+    setError(error) {
+      commit('setError', error.response.data.message)
+      setTimeout(() => commit('clearError'), 200)
+    },
+    SidenavTrigger({ commit }) {
       commit('SidenavTrigger')
     }
   },
@@ -36,7 +39,6 @@ export default new Vuex.Store({
   modules: {
     auth,
     items,
-    brands,
     filters,
     cart
   }

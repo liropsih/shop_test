@@ -9,18 +9,18 @@
 
 export default {
   name: "empty-layout",
-  computed: {
-    error() {
-      return this.$store.getters.error
-    }
-  },
-  watch: {
-    error(error) {
-      if (this.$store.getters.error) { 
-        this.$error(error || 'Что-то пошло не так') 
-      }
-    }
-  }
+  // computed: {
+  //   error() {
+  //     return this.$store.getters.error
+  //   }
+  // },
+  // watch: {
+  //   error(error) {
+  //     if (this.$store.getters.error) { 
+  //       this.$error(error || 'Что-то пошло не так') 
+  //     }
+  //   }
+  // }
 }
 </script>
 

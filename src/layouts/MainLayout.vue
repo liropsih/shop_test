@@ -27,30 +27,30 @@ export default {
     loading: true
   }),
   computed: {
-    ...mapGetters(['error', 'isLoggedIn']),
-    // error() {
-    //   return this.$store.getters.error
-    // },
+    ...mapGetters(['isLoggedIn']),
     message() {
       return this.$route.query.message
     }
   },
   watch: {
-    error(error) {
-      this.$error(messages[error] || 'Что-то пошло не так')
-    },
+    // error(error) {
+    //   this.$error(messages[error] || 'Что-то пошло не так')
+    // },
     message(message) {
       this.$message(messages[message])
     }
   },
   async mounted() {
     if (this.isLoggedIn) {
-      await this.$store.dispatch('authCheck')
+      await this.authCheck()
     }
     this.loading = false
     if (messages[this.$route.query.message]) {
       this.$message(messages[this.$route.query.message])
     }
   },
+  methods: {
+    ...mapActions(['authCheck'])
+  }
 }
 </script>

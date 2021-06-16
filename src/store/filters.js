@@ -13,14 +13,12 @@ export default {
         }
     },
     actions: {
-        async getBrandsFilter({ commit }, id) {
+        async getBrandsFilter({ commit, dispatch }, id) {
             try {
                 const { data } = await $axios.get(`/api/brand?${id}`)
                 commit('setBrandsFilter', data)
             } catch (e) {
-                commit('setError', e.response.data.message)
-                setTimeout(() => commit('clearError'), 200)
-                throw (e)
+                dispatch('setError', e)
             }
         },
         setBrandsFilter({ commit }, brandsFilter) {

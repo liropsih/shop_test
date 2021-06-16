@@ -4,42 +4,51 @@ export default {
     state: {
         items: [],
         itemsCount: 0,
-        searchItems: []
+        // searchItems: [],
+        brands: null
     },
     mutations: {
         getItems(state, items) {
             state.items = items.rows
             state.itemsCount = items.count
         },
-        searchItems(state, searchItems) {
-            state.searchItems = searchItems
+        // searchItems(state, searchItems) {
+            // state.searchItems = searchItems
+        // },
+        getBrands(state, data) {
+            state.brands = data.brands
         }
     },
     actions: {
-        async getItems({ commit }, { catId, get }) {
+        async getItems({ commit, dispatch }, { catId, get }) {
             try {
                 const { data } = await $axios.get(`/api/item/get/${catId}?${get}`)
                 commit('getItems', data)
             } catch (e) {
-                commit('setError', e.response.data.message)
-                setTimeout(() => commit('clearError'), 200)
-                throw (e)
+                dispatch('setError', e)
             }
         },
-        async searchItems({ commit }, get) {
+        // async searchItems({ commit, dispatch }, get) {
+        //     try {
+        //         const { data } = await $axios.get(`/api/item/search?name=${get}`)
+        //         commit('searchItems', data)
+        //     } catch (e) {
+        //         dispatch('setError', e)
+        //     }
+        // },
+        async getBrands({ commit, dispatch }) {
             try {
-                const { data } = await $axios.get(`/api/item/search?name=${get}`)
-                commit('searchItems', data)
+                const { data } = await $axios.get(`/api/brand`)
+                commit('getBrands', data)
             } catch (e) {
-                commit('setError', e.response.data.message)
-                setTimeout(() => commit('clearError'), 200)
-                throw (e)
+                dispatch('setError', e)
             }
         }
     },
     getters: {
         items: s => s.items,
         itemsCount: s => s.itemsCount,
-        searchItems: s => s.searchItems
+        // searchItems: s => s.searchItems,
+        brands: s => s.brands
     }
 }

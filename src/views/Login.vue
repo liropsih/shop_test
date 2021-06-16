@@ -62,6 +62,7 @@
 <script>
 import { email, required } from 'vuelidate/lib/validators'
 import messages from '@/utils/messages'
+import { mapActions } from 'vuex'
 export default {
   //   metaInfo () {
   //     return {
@@ -83,18 +84,19 @@ export default {
     }
   },
   methods: {
+    ...mapActions(['login']),
     async login() {
       if (this.$v.$invalid) {
         this.$v.$touch()
         return
       }
-      const formData = {
+      const data = {
         email: this.email,
         password: this.password
       }
 
       try {
-        await this.$store.dispatch('login', formData)
+        await this.login(data)
         this.$router.push('/profile')
       } catch (e) { }
     }

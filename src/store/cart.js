@@ -10,14 +10,12 @@ export default {
         }
     },
     actions: {
-        async getCart({ commit }) {
+        async getCart({ commit, dispatch }) {
             try {
                 const { data } = await $axios.get('/api/user/cart')
                 commit('getCart', data)
             } catch (e) {
-                commit('setError', e.response.data.message)
-                setTimeout(() => commit('clearError'), 200)
-                throw (e)
+                dispatch('setError', e)
             }
         }
     },

@@ -23,39 +23,34 @@ export default {
         }
     },
     actions: {
-        async register({ commit }, body) {
+        async register({ commit, dispatch }, body) {
             try {
                 const { data } = await $axios.post('/api/user/register', body)
                 localStorage.setItem('token', data)
                 commit('login', data)
             } catch (e) {
-                commit('setError', e.response.data.message)
-                setTimeout(() => commit('clearError'), 200)
-                throw (e)
+                dispatch('setError', e)
             }
         },
-        async login({ commit }, body) {
+        async login({ commit, dispatch }, body) {
             try {
                 const { data } = await $axios.post('/api/user/login', body)
                 localStorage.setItem('token', data)
                 commit('login', data)
             } catch (e) {
-                commit('setError', e.response.data.message)
-                setTimeout(() => commit('clearError'), 200)
-                throw (e)
+                dispatch('setError', e)
             }
         },
         logout({ commit }) {
             commit('logout')
         },
-        async authCheck({ commit }) {
+        async authCheck({ commit, dispatch }) {
             try {
                 const { data } = await $axios.get('/api/user/auth')
                 localStorage.setItem('token', data)
                 commit('login', data)
             } catch (e) {
-                commit('setError', e.response.data.message)
-                setTimeout(() => commit('clearError'), 200)
+                dispatch('setError', e)
                 commit('logout')
             }
         }

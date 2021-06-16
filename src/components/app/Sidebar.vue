@@ -86,7 +86,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 import $axios from '@/http'
 import Collapse from '@/components/Collapse.vue'
 import Search from '@/components/Search.vue'
@@ -123,12 +123,13 @@ export default {
     }
   },
   methods: {
+    ...mapActions(['setError']),
     async getCats() {
       try {
         const { data } = await $axios.get('/api/cat')
         this.links.forEach(l => (l.url == '/items') && (l.cats = data.cats))
       } catch (e) {
-        throw e
+        this.setError(e)
       }
     },
     SidenavInit(el) {

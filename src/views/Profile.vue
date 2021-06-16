@@ -261,7 +261,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['authCheck']),
+    ...mapActions(['authCheck', 'setError']),
     dateFilter(date) {
       const options = {
         day: '2-digit',
@@ -351,7 +351,7 @@ export default {
         this.phone = data.phone
         this.birthdate = this.dateFilter(data.birthdate)
       } catch (e) {
-        throw (e)
+        this.setError(e)
       }
     },
     async submitHandler() {
@@ -372,9 +372,8 @@ export default {
         }
         await $axios.post('/api/user/update_info', data)
         await this.authCheck()
-
       } catch (e) {
-        throw (e)
+        this.setError(e)
       }
     }
   }
