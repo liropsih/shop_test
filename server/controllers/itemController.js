@@ -1,3 +1,4 @@
+const { Op } = require("sequelize")
 const { Item, ItemInfo } = require('@@/models')
 const ApiError = require('@@/error/api.error')
 const uuid = require('uuid')
@@ -8,7 +9,7 @@ const imgFolder = path.resolve(__dirname, '..', 'static', 'item', 'img')
 class ItemController {
     async create(req, res, next) {
         try {
-            let { name, price, brandId, catId, info } = req.body
+            let { name, price, oldPrice, sale, tag, brandId, catId, info } = req.body
             const { img } = req.files
             if (img.size > (2 * 1024 * 1024)) {
                 return next(ApiError.badRequest('Размер изображения превышает 2мб'))
@@ -18,7 +19,7 @@ class ItemController {
             }
             const fileName = uuid.v4() + path.extname(img.name).toLowerCase()
             img.mv(path.resolve(imgFolder, fileName))
-            const item = await Item.create({ name, price, brandId, catId, img: fileName })
+            const item = await Item.create({ name, price, oldPrice, sale, tag, brandId, catId, img: fileName })
 
             if (info) {
                 info = JSON.parse(info)
@@ -39,7 +40,7 @@ class ItemController {
 
     async update(req, res, next) {
         try {
-            let { id, name, price, brandId, catId, info } = req.body
+            let { id, name, price, oldPrice, sale, tag, brandId, catId, info } = req.body
             const item = await Item.findByPk(id)
             let img
             let fileName
@@ -70,7 +71,7 @@ class ItemController {
                 )
             }
 
-            const newItem = await item.update({ name, price, brandId, catId, img: fileName })
+            const newItem = await item.update({ name, price, oldPrice, sale, tag, brandId, catId, img: fileName })
 
             return res.json({ newItem })
         } catch (e) {
@@ -93,7 +94,8 @@ class ItemController {
     }
 
     async getAll(req, res) {
-        let { brandId, catId, limit, page } = req.query
+        const { catId } = req.params
+        let { brandId, limit, page } = req.query
         page = page || 1
         limit = limit || 12
         let offset = page * limit - limit
@@ -120,6 +122,16 @@ class ItemController {
             include: [{ model: ItemInfo, as: 'info' }]
         })
         return res.json(item)
+    }
+
+    async search(req, res) {
+        let { name, limit } = req.query
+        limit = limit || 10
+        let items
+        if (name) {
+            items = await Item.findAndCountAll({ where: { name: { [Op.iLike]: '%' + name + '%' } }, limit })
+        }
+        return res.json(items)
     }
 }
 

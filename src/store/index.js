@@ -1,12 +1,16 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import auth from './auth'
+import items from './items'
+import brands from './brands'
+import filters from './filters'
+import cart from './cart'
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    sideNav: null,
+    SidenavTrigger: true,
     error: null
   },
   mutations: {
@@ -15,13 +19,25 @@ export default new Vuex.Store({
     },
     clearError(state) {
       state.error = null
+    },
+    SidenavTrigger(state) {
+      state.SidenavTrigger = !state.SidenavTrigger
     }
   },
-  actions: {},
+  actions: {
+    SidenavTrigger({commit}) {
+      commit('SidenavTrigger')
+    }
+  },
   getters: {
-    error: s => s.error
+    error: s => s.error,
+    SidenavChangeState: s => s.SidenavTrigger
   },
   modules: {
-    auth
+    auth,
+    items,
+    brands,
+    filters,
+    cart
   }
 })

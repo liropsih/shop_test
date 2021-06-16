@@ -42,12 +42,28 @@ class BrandController {
 
     async getAll(req, res, next) {
         try {
-            const brands = await Brand.findAll()
+            const { id } = req.query
+            let brands
+            if (id) {
+                brands = await Brand.findAll({ where: { id } })
+            } else {
+                brands = await Brand.findAll()
+            }
             return res.json({ brands })
         } catch (e) {
             next(ApiError.internal(e.message))
         }
     }
+
+    // async getOne(req, res, next) {
+    //     try {
+    //         const { id } = req.body
+    //         const brands = await Brand.findAll(id)
+    //         return res.json({ brands })
+    //     } catch (e) {
+    //         next(ApiError.internal(e.message))
+    //     }
+    // }
 }
 
 module.exports = new BrandController()

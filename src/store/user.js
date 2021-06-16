@@ -1,13 +1,10 @@
 import $axios from '@/http'
-import { decode } from 'jsonwebtoken'
-
-const token = localStorage.getItem('token')
 
 export default {
     state: {
         token: token || null,
         name: token ? decode(token).name : null,
-        roles: token ? decode(token).roles : []
+        roles: token ? decode(token).roles : null
     },
     mutations: {
         login(state, data) {
@@ -18,15 +15,14 @@ export default {
         logout(state) {
             state.token = null
             state.name = null
-            state.roles = []
+            state.roles = null
             localStorage.removeItem('token')
         }
     },
     actions: {
-        async register({ commit }, body) {
+        async getUserInfo({ commit }) {
             try {
-                const { data } = await $axios.post('/api/user/register', body)
-                localStorage.setItem('token', data)
+                const { data } = await $axios.get('/api/user/info')
                 commit('login', data)
             } catch (e) {
                 commit('setError', e.response.data.message)
@@ -54,8 +50,6 @@ export default {
                 localStorage.setItem('token', data)
                 commit('login', data)
             } catch (e) {
-                commit('setError', e.response.data.message)
-                setTimeout(() => commit('clearError'), 200)
                 commit('logout')
             }
         }

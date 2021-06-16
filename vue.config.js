@@ -1,13 +1,21 @@
 module.exports = {
-  devServer: {
-    proxy: 'http://localhost:3000'
-  },
-  pages: process.env.NODE_ENV === 'development' ? {
-    index: 'src/main.js',
-    admin: 'src/admin.js'
+  // pages: process.env.NODE_ENV === 'development' ? {
+  //   index: 'src/main.js',
+  //   admin: 'src/admin.js'
+  // } : undefined,
+  // publicPath: process.env.NODE_ENV === 'production'
+  //   ? '.'
+  //   : '/',
+  configureWebpack: process.env.NODE_ENV === 'production' ? {
+    performance: {
+      hints: false
+    },
+    optimization: {
+      splitChunks: {
+        minSize: 10000,
+        maxSize: 250000,
+      }
+    }
   } : undefined,
-  publicPath: process.env.NODE_ENV === 'production'
-    ? '.'
-    : '/',
-  runtimeCompiler: true
+  runtimeCompiler: process.env.NODE_ENV === 'development' ? true : undefined
 }

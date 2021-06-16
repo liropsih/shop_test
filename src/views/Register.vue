@@ -1,19 +1,26 @@
 <template>
   <form class="card auth-card" @submit.prevent="register">
     <div class="card-content">
-      <span class="card-title">Laravel Test Shop</span>
+      <span class="card-title">NodeJS + VUE - Test Shop</span>
       <div class="input-field">
         <input
           id="name"
           type="text"
           v-model.trim="name"
-          :class="{ invalid: $v.name.$dirty && !$v.name.required }"
+          :class="{ invalid: ($v.name.$dirty && !$v.name.required) ||
+              ($v.name.$dirty && !$v.name.minLength) }"
         />
         <label for="name">Имя</label>
         <small
           v-if="$v.name.$dirty && !$v.name.required"
           class="helper-text invalid"
           >Имя не должно быть пустым</small
+        >
+        <small
+          v-if="$v.name.$dirty && !$v.name.minLength"
+          class="helper-text invalid"
+          >Имя должно содержать не менее
+          {{ $v.name.$params.minLength.min }} символов</small
         >
       </div>
       <div class="input-field">
@@ -31,12 +38,12 @@
         <small
           v-if="$v.email.$dirty && !$v.email.required"
           class="helper-text invalid"
-          >Поле Email не должно быть пустым</small
+          >Email не должен быть пустым</small
         >
         <small
           v-else-if="$v.email.$dirty && !$v.email.email"
           class="helper-text invalid"
-          >Введите корректный Email</small
+          >Некорректный Email</small
         >
       </div>
       <div class="input-field">
@@ -54,25 +61,15 @@
         <small
           v-if="$v.password.$dirty && !$v.password.required"
           class="helper-text invalid"
-          >Поле Password не должно быть пустым</small
+          >Пароль не должен быть пустым</small
         >
         <small
           v-else-if="$v.password.$dirty && !$v.password.minLength"
           class="helper-text invalid"
           >Пароль должен содержать не менее
-          {{ $v.password.$params.minLength.min }} символов. Сейчас он
-          {{ password.length }}</small
+          {{ $v.password.$params.minLength.min }} символов</small
         >
       </div>
-      <!-- 
-      <div class="input-field">
-        <select v-model="is_admin" ref="adminselect" class="no-autoinit">
-          <option value="0">Нет</option>
-          <option value="1">Да</option>
-        </select>
-        <label>Админ?</label>
-      </div> -->
-
       <p>
         <label>
           <input type="checkbox" v-model="agree" />
@@ -109,23 +106,21 @@ export default {
   //       title: this.$title('Register')
   //     }
   //   },
-  name: 'register',
+  name: 'Register',
   data: () => ({
     name: '',
     email: '',
     password: '',
     // password_confirmation: '',
-    agree: false,
-    // is_admin: null
+    agree: false
   }),
   validations: {
     email: { email, required },
     password: { required, minLength: minLength(6) },
-    name: { required },
+    name: { required, minLength: minLength(2) },
     agree: { checked: v => v }
   },
   mounted() {
-    // M.FormSelect.init(this.$refs.adminselect)
     if (messages[this.$route.query.message]) {
       this.$message(messages[this.$route.query.message])
     }
@@ -136,14 +131,14 @@ export default {
         this.$v.$touch()
         return
       }
-      const formData = {
+      const data = {
         name: this.name,
         email: this.email,
         password: this.password
       }
       try {
-        await this.$store.dispatch('register', formData)
-        this.$router.push('/dashboard')
+        await this.$store.dispatch('register', data)
+        this.$router.push('/profile')
       } catch (e) { }
     }
   }

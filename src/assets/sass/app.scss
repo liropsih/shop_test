@@ -9,6 +9,7 @@
 
 // Materialize-css
 @import '~materialize-css/sass/materialize';
-@import 'https://fonts.googleapis.com/icon?family=Material+Icons';
+@import 'https://fonts.googleapis.com/css?family=Roboto:400,500,700,400italic|Material+Icons';
+@import '~vue-select/src/scss/vue-select.scss';
 @import 'spacing';
 @import 'style'

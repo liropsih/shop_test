@@ -17,12 +17,12 @@
         <small
           v-if="$v.email.$dirty && !$v.email.required"
           class="helper-text invalid"
-          >Поле Email не должно быть пустым</small
+          >Email не должен быть пустым</small
         >
         <small
           v-else-if="$v.email.$dirty && !$v.email.email"
           class="helper-text invalid"
-          >Введите корректный Email</small
+          >Некорректный Email</small
         >
       </div>
       <div class="input-field">
@@ -30,24 +30,13 @@
           id="password"
           type="password"
           v-model.trim="password"
-          :class="{
-            invalid:
-              ($v.password.$dirty && !$v.password.required) ||
-              ($v.password.$dirty && !$v.password.minLength),
-          }"
+          :class="{invalid:$v.password.$dirty && !$v.password.required}"
         />
         <label for="password">Пароль</label>
         <small
           v-if="$v.password.$dirty && !$v.password.required"
           class="helper-text invalid"
-          >Поле Password не должно быть пустым</small
-        >
-        <small
-          v-else-if="$v.password.$dirty && !$v.password.minLength"
-          class="helper-text invalid"
-          >Пароль должен содержать не менее
-          {{ $v.password.$params.minLength.min }} символов. Сейчас он
-          {{ password.length }}</small
+          >Пароль не должен быть пустым</small
         >
       </div>
     </div>
@@ -71,7 +60,7 @@
 </template>
 
 <script>
-import { email, required, minLength } from 'vuelidate/lib/validators'
+import { email, required } from 'vuelidate/lib/validators'
 import messages from '@/utils/messages'
 export default {
   //   metaInfo () {
@@ -79,14 +68,14 @@ export default {
   //       title: this.$title('Login')
   //     }
   //   },
-  name: 'login',
+  name: 'Login',
   data: () => ({
     email: '',
     password: ''
   }),
   validations: {
     email: { email, required },
-    password: { required, minLength: minLength(6) }
+    password: { required }
   },
   mounted() {
     if (messages[this.$route.query.message]) {
@@ -106,7 +95,7 @@ export default {
 
       try {
         await this.$store.dispatch('login', formData)
-        this.$router.push('/dashboard')
+        this.$router.push('/profile')
       } catch (e) { }
     }
   }

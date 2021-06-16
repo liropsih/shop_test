@@ -1,4 +1,4 @@
-const { Cat } = require('@@/models')
+const { Cat, Item } = require('@@/models')
 const ApiError = require('@@/error/api.error')
 
 class CatController {
@@ -55,6 +55,19 @@ class CatController {
             next(ApiError.internal(e.message))
         }
     }
+
+    // async getOne(req, res, next) {
+    //     try {
+    //         const { id } = req.body
+    //         const cats = await Cat.findByPk( id, {
+    //             include: Item
+    //             // count rows????
+    //         })
+    //         return res.json({ cats })
+    //     } catch (e) {
+    //         next(ApiError.internal(e.message))
+    //     }
+    // }
 }
 
 module.exports = new CatController()

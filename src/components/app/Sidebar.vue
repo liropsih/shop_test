@@ -1,122 +1,142 @@
 <template>
-  <ul id="sideNav" class="sidenav sidenav-fixed no-autoinit" ref="sideNav">
-    <li>
-      <a href="#" class="p-0 sideNavClose hide-on-large-only" @click.prevent
-        ><i
-          class="material-icons right mr-3 hover-red"
-          @click.prevent="sideNavClose()"
-          >close</i
-        ></a
-      >
-    </li>
-    <li>
-      <ul class="collapsible sidenav-collapsible">
-        <router-link
-          v-for="link in links"
-          :key="link.id"
-          :to="link.url"
-          custom
-          v-slot="{ navigate, isActive, isExactActive }"
+  <div>
+    <ul id="Sidenav" class="sidenav sidenav-fixed no-autoinit" ref="Sidenav">
+      <li>
+        <a href="#" class="p-0 SidenavClose hide-on-large-only" @click.prevent
+          ><i
+            class="material-icons right mr-3 hover-red"
+            @click.prevent="SidenavTrigger()"
+            >close</i
+          ></a
         >
-          <li
-            :class="
-              (link.exact ? isExactActive : isActive) && 'active' && 'open'
-            "
+      </li>
+      <li>
+        <Search class="hide-on-large-only" />
+      </li>
+      <!-- LINKS -->
+      <router-link
+        v-for="link in links"
+        :key="link.id"
+        :to="link.url"
+        custom
+        v-slot="{ navigate, href, isActive, isExactActive }"
+      >
+        <li>
+          <collapse
+            v-if="!loading && link.cats"
+            :title="link.title"
+            :isActive="link.exact ? isExactActive : isActive"
           >
-            <a
-              v-if="link.cats"
-              href="#"
-              @click.prevent
-              class="collapsible-header waves-effect waves-red"
-              >{{ link.title }}
-              <span class="material-icons">arrow_right</span>
-            </a>
-            <a
-              v-else
-              href="#"
-              @click="navigate"
-              class="collapsible-header waves-effect waves-red"
-              >{{ link.title }}
-            </a>
-            <div class="collapsible-body">
-              <!-- Каталоги -->
-              <ul v-if="link.cats" class="collapsible">
-                <router-link
-                  v-for="cat in link.cats"
-                  :key="cat.id"
-                  :to="`${link.url}?${cat.id}`"
-                  custom
-                  v-slot="{ navigate, isActive }"
+            <!-- CATS -->
+            <router-link
+              v-for="cat in link.cats"
+              :key="cat.id"
+              :to="`${link.url}/${cat.id}`"
+              custom
+              v-slot="{ navigate, href, isActive }"
+            >
+              <li>
+                <collapse
+                  v-if="cat.children"
+                  :title="cat.name"
+                  :isActive="isActive"
                 >
-                  <li :class="isActive && 'active'">
-                    <a
-                      v-if="cat.children"
-                      href="#"
-                      @click.prevent
-                      class="collapsible-header waves-effect waves-red"
-                      >{{ cat.name }}
-                      <span class="material-icons">arrow_right</span>
-                    </a>
-                    <a
-                      v-else
-                      href="#"
-                      @click="navigate"
-                      class="collapsible-header waves-effect waves-red"
-                      >{{ cat.name }}
-                    </a>
-                    <div class="collapsible-body">
-                      <!-- Каталоги 2 уровня -->
-                      <ul class="collapsible" v-if="cat.children">
-                        <router-link
-                          v-for="scat in cat.children"
-                          :key="scat.id"
-                          :to="`${link.url}?${cat.id}&${scat.id}`"
-                          custom
-                          v-slot="{ navigate, isActive }"
-                        >
-                          <li :class="isActive && 'active'">
-                            <a
-                              href="#"
-                              @click="navigate"
-                              class="collapsible-header waves-effect waves-red"
-                              >{{ scat.name }}
-                              <div class="collapsible-body"></div>
-                            </a>
-                          </li>
-                        </router-link>
-                      </ul>
-                    </div>
-                  </li>
-                </router-link>
-              </ul>
-            </div>
-          </li>
-        </router-link>
-      </ul>
-    </li>
-  </ul>
+                  <!-- SUBCATS -->
+                  <router-link
+                    v-for="scat in cat.children"
+                    :key="scat.id"
+                    :to="`${link.url}/${cat.id}/${scat.id}`"
+                    custom
+                    v-slot="{ navigate, href, isActive }"
+                  >
+                    <li>
+                      <a
+                        :href="href"
+                        @click="navigate"
+                        class="collapse-header waves-effect waves-red"
+                        :class="isActive && 'active'"
+                        >{{ scat.name }}
+                      </a>
+                    </li>
+                  </router-link>
+                </collapse>
+                <a
+                  v-else
+                  :href="href"
+                  @click="navigate"
+                  class="collapse-header waves-effect waves-red"
+                  :class="isActive && 'active'"
+                  >{{ cat.name }}
+                </a>
+              </li>
+            </router-link>
+          </collapse>
+          <a
+            v-else
+            :href="href"
+            @click="navigate"
+            class="collapse-header waves-effect waves-red"
+            :class="(link.exact ? isExactActive : isActive) && 'active'"
+            >{{ link.title }}
+          </a>
+        </li>
+      </router-link>
+    </ul>
+  </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+import $axios from '@/http'
+import Collapse from '@/components/Collapse.vue'
+import Search from '@/components/Search.vue'
+
 export default {
+  name: 'Sidebar',
+  components: { Collapse, Search },
   data: () => ({
+    loading: true,
     links: [
       { id: 0, title: 'Главная', url: '/', exact: 'true' },
       { id: 1, title: 'Каталог', url: '/items', cats: [] },
       { id: 2, title: 'Акции', url: '/sale' }
-    ]
+    ],
+    Sidenav: {}
   }),
+  computed: {
+    ...mapGetters(['SidenavChangeState']),
+    // layout() {
+    //   return (this.$route.meta.layoutSide || 'empty') + '-layout'
+    // }
+  },
   async mounted() {
-    const { cats } = await (await fetch('api/cat')).json()
-    // this.cats = cats
-    this.links.forEach(l => (l.url == '/items') && (l.cats = cats))
-    this.$store.state.sideNav = M.Sidenav.init(this.$refs.sideNav)
-    // M.Collapsible.init(document.querySelectorAll('.collapsible'))
-    M.AutoInit()
+    this.SidenavInit(this.$refs.Sidenav)
+    await this.getCats()
+    this.loading = false
+  },
+  watch: {
+    SidenavChangeState() {
+      this.SidenavTrigger()
+    },
+    isOpen(val) {
+      val ? this.Sidenav.close() : this.Sidenav.open()
+    }
   },
   methods: {
-    sideNavClose() {
-      this.$store.state.sideNav.close()
+    async getCats() {
+      try {
+        const { data } = await $axios.get('/api/cat')
+        this.links.forEach(l => (l.url == '/items') && (l.cats = data.cats))
+      } catch (e) {
+        throw e
+      }
+    },
+    SidenavInit(el) {
+      M.Sidenav.init(el)
+      this.Sidenav = M.Sidenav.getInstance(el)
+    },
+    SidenavTrigger() {
+      this.Sidenav.isOpen ? this.Sidenav.close() : this.Sidenav.open()
     }
   }
 }

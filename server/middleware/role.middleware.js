@@ -7,11 +7,12 @@ module.exports = async function (req, res, next) {
         next()
     }
     try {
-        let token = req.headers.authorization
+        // let token = req.headers.authorization
+        const token = req.headers.authorization
         if (!token) {
             next(ApiError.unauthorized('Пользователь не авторизован'))
         }
-        token = token.split(' ')[1] // Bearer token
+        // token = token.split(' ')[1] // Bearer token
         const decoded = jwt.verify(token, process.env.SECRET_KEY)
         const requestRoles = await requestController.getRoles(req.originalUrl)
         let hasRole = false

@@ -15,29 +15,22 @@
 </template>
 
 <script>
+import { mapGetters, mapActions } from 'vuex'
 import Navbar from "@/components/app/Navbar"
 import Sidebar from "@/components/app/Sidebar"
 import Footer from "@/components/app/Footer"
 import messages from '@/utils/messages'
 export default {
   name: "main-layout",
+  components: { Navbar, Sidebar, Footer },
   data: () => ({
     loading: true
   }),
-  async mounted() {
-    if (this.$store.getters.isLoggedIn) {
-      await this.$store.dispatch('tokenVerify')
-    }
-    this.loading = false
-    if (messages[this.$route.query.message]) {
-      this.$message(messages[this.$route.query.message])
-    }
-  },
-  components: { Navbar, Sidebar, Footer },
   computed: {
-    error() {
-      return this.$store.getters.error
-    },
+    ...mapGetters(['error', 'isLoggedIn']),
+    // error() {
+    //   return this.$store.getters.error
+    // },
     message() {
       return this.$route.query.message
     }
@@ -49,6 +42,15 @@ export default {
     message(message) {
       this.$message(messages[message])
     }
-  }
+  },
+  async mounted() {
+    if (this.isLoggedIn) {
+      await this.$store.dispatch('authCheck')
+    }
+    this.loading = false
+    if (messages[this.$route.query.message]) {
+      this.$message(messages[this.$route.query.message])
+    }
+  },
 }
 </script>

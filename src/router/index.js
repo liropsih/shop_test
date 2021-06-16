@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import store from '@/store'
-// import axios from 'axios'
 
 Vue.use(VueRouter)
 
@@ -14,7 +13,19 @@ const routes = [
   },
   {
     path: '/items',
-    name: 'Items',
+    name: 'Item-link',
+    meta: { layout: 'main' },
+    component: () => import('@/views/Items.vue')
+  },
+  {
+    path: '/items/:id',
+    name: 'Items-catLink',
+    meta: { layout: 'main' },
+    component: () => import('@/views/Items.vue')
+  },
+  {
+    path: '/items/:id/:subId',
+    name: 'Items-subCatLink',
     meta: { layout: 'main' },
     component: () => import('@/views/Items.vue')
   },
@@ -43,24 +54,24 @@ const routes = [
     component: () => import('@/views/Register.vue')
   },
   {
-    path: '/dashboard',
-    name: 'Dashboard',
+    path: '/profile',
+    name: 'Profile',
     meta: {
       layout: 'main',
       is_auth: true
     },
-    component: () => import('@/views/Dashboard.vue')
+    component: () => import('@/views/Profile.vue')
+  },
+  {
+    path: '/admin',
+    name: 'Admin',
+    meta: {
+      layout: 'main',
+      layoutSide: 'admin',
+      is_admin: true
+    },
+    component: () => import('@/views/Admin.vue')
   }
-  // {
-  //   path: '/admin',
-  //   name: 'Admin',
-  //   meta: {
-  //     layout: 'main',
-  //     is_auth: true,
-  //     is_admin: true
-  //   },
-  //   component: () => import('@/views/Admin.vue')
-  // }
 ]
 
 const router = new VueRouter({
@@ -70,57 +81,20 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  //   // if (!store.getters.user.name && store.getters.isLoggedIn) {
-  //     // store.dispatch('getUser')
-  //     // console.log(store.getters.user)
-  //   // }
-  //   // const token = {token: localStorage.getItem('token')}
-  //   // const post = axios({ url: '/getuser', data: token, method: 'POST' })
-  //   // console.log(post.data.user)
   const meta_auth = to.matched.some(record => record.meta.is_auth)
   const meta_guest = to.matched.some(record => record.meta.is_guest)
-  // const meta_admin = to.matched.some(record => record.meta.is_admin)
+  const meta_admin = to.matched.some(record => record.meta.is_admin)
   const isLoggedIn = store.getters.isLoggedIn
-  // const status = store.getters.status
-  if (meta_auth && !isLoggedIn) {
+  const isAdmin = store.getters.isAdmin
+  if (meta_admin && !isAdmin) {
+    next('/')
+  } else if (meta_auth && !isLoggedIn) {
     next('/login?message=login')
-  // } else if (meta_admin && (status != 1 && status != 2)) {
-  //   next('/dashboard')
   } else if (meta_guest && isLoggedIn) {
-    next('/dashboard')
+    next('/profile')
   } else {
     next()
   }
 })
-
-
-
-// if (to.matched.some(record => record.meta.auth)) {
-//   if (store.getters.isLoggedIn) {
-
-//   console.log(store.getters.user)
-//     next()
-//     return
-//   }
-//   next('/login?message=login')
-// } else if (to.matched.some(record => record.meta.is_admin)) {
-//   // console.log(store.getters.user.is_admin)
-//   if (store.getters.user.is_admin == 1) {
-//     // console.log('is_admin = true')
-//     next()
-//     return
-//   }
-//   console.log('is_admin = false')
-//   next('/dashboard')
-// } else if (to.matched.some(record => record.meta.is_guest)) {
-//   if (!store.getters.isLoggedIn) {
-//     next()
-//     return
-//   }
-//   next('/dashboard')
-// } else {
-//   next()
-// }
-// })
 
 export default router
