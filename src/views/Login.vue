@@ -1,5 +1,5 @@
 <template>
-  <form class="card auth-card" @submit.prevent="login">
+  <form class="card auth-card" @submit.prevent="loginHandler">
     <div class="card-content">
       <span class="card-title">NodeJS + VUE - Test Shop</span>
       <div class="input-field">
@@ -85,7 +85,7 @@ export default {
   },
   methods: {
     ...mapActions(['login']),
-    async login() {
+    async loginHandler() {
       if (this.$v.$invalid) {
         this.$v.$touch()
         return

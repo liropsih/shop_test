@@ -1,5 +1,5 @@
 <template>
-  <form class="card auth-card" @submit.prevent="register">
+  <form class="card auth-card" @submit.prevent="registerHandler">
     <div class="card-content">
       <span class="card-title">NodeJS + VUE - Test Shop</span>
       <div class="input-field">
@@ -7,8 +7,11 @@
           id="name"
           type="text"
           v-model.trim="name"
-          :class="{ invalid: ($v.name.$dirty && !$v.name.required) ||
-              ($v.name.$dirty && !$v.name.minLength) }"
+          :class="{
+            invalid:
+              ($v.name.$dirty && !$v.name.required) ||
+              ($v.name.$dirty && !$v.name.minLength),
+          }"
         />
         <label for="name">Имя</label>
         <small
@@ -70,10 +73,33 @@
           {{ $v.password.$params.minLength.min }} символов</small
         >
       </div>
+      <div class="input-field">
+        <input
+          id="passwordConfirm"
+          type="password"
+          v-model.trim="passwordConfirm"
+          :class="{
+            invalid:
+              ($v.passwordConfirm.$dirty && !$v.passwordConfirm.required) ||
+              ($v.passwordConfirm.$dirty && !$v.passwordConfirm.sameAs),
+          }"
+        />
+        <label for="passwordConfirm">Подтвердите пароль</label>
+        <small
+          v-if="$v.passwordConfirm.$dirty && !$v.passwordConfirm.required"
+          class="helper-text invalid"
+          >Поле не должно быть пустым</small
+        >
+        <small
+          v-else-if="$v.passwordConfirm.$dirty && !$v.passwordConfirm.sameAs"
+          class="helper-text invalid"
+          >Пароли не совпадают</small
+        >
+      </div>
       <p>
         <label>
           <input type="checkbox" v-model="agree" />
-          <span>С правилами согласен</span>
+          <span>С <a href="#" @click.prevent>правилами</a> согласен</span>
         </label>
       </p>
     </div>
@@ -98,7 +124,7 @@
 
 <script>
 import messages from '@/utils/messages'
-import { email, required, minLength } from 'vuelidate/lib/validators'
+import { email, required, minLength, sameAs } from 'vuelidate/lib/validators'
 import { mapActions } from 'vuex'
 
 export default {
@@ -112,13 +138,14 @@ export default {
     name: '',
     email: '',
     password: '',
-    // password_confirmation: '',
+    passwordConfirm: '',
     agree: false
   }),
   validations: {
+    name: { required, minLength: minLength(2) },
     email: { email, required },
     password: { required, minLength: minLength(6) },
-    name: { required, minLength: minLength(2) },
+    passwordConfirm: { required, minLength: minLength(6), sameAs: sameAs(function () { return this.password }) },
     agree: { checked: v => v }
   },
   mounted() {
@@ -128,7 +155,7 @@ export default {
   },
   methods: {
     ...mapActions(['register']),
-    async register() {
+    async registerHandler() {
       if (this.$v.$invalid) {
         this.$v.$touch()
         return

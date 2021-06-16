@@ -109,6 +109,13 @@ a:focus {
     z-index: 990;
     height: 100% !important;
 
+    &::-webkit-scrollbar {
+        width: 2px;
+        background-color: #fff;
+    }
+    &::-webkit-scrollbar-thumb {
+        background: linear-gradient(180deg, #ef535080, #ef5350, #ef535080);
+    }
     .SidenavClose:hover {
         background-color: initial !important;
     }

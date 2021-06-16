@@ -49,6 +49,16 @@ const CartItem = sequelize.define(
     count: { type: DataTypes.INTEGER }
 })
 
+const Order = sequelize.define(
+    'order', {
+    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true }
+})
+
+const OrderItem = sequelize.define(
+    'order_item', {
+    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+})
+
 const Item = sequelize.define(
     'item', {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
@@ -98,6 +108,12 @@ Cart.belongsTo(User)
 
 Cart.belongsToMany(Item, { through: CartItem })
 Item.belongsToMany(Cart, { through: CartItem })
+
+User.hasMany(Order)
+Order.belongsTo(User)
+
+Order.belongsToMany(Item, { through: OrderItem })
+Item.belongsToMany(Order, { through: OrderItem })
 
 User.belongsToMany(Role, { through: UserRole })
 Role.belongsToMany(User, { through: UserRole })
@@ -164,7 +180,7 @@ async function createTableRecords() {
     let user = await User.findOne({ where: { email: 'aa@aa.aa' } })
     let adminRole = await Role.findOne({ where: { value: 'Admin' } })
     if (!user) {
-        user = await User.create({ email: 'aa@aa.aa', password: '$2b$05$EjKH9/mDP5RojK34aAXrMus6CWU/.FLu92WuO4.Nn489R6Bspvy3S' })
+        user = await User.create({ name: 'Admin', email: 'aa@aa.aa', password: '$2b$05$EjKH9/mDP5RojK34aAXrMus6CWU/.FLu92WuO4.Nn489R6Bspvy3S' })
         await user.addRole(adminRole)
         await user.addCart()
     }

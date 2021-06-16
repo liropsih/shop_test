@@ -46,7 +46,7 @@ export default {
     this.autocomplete = M.Autocomplete.getInstance(this.$refs.search)
   },
   methods: {
-    ...mapActions('setError'),
+    ...mapActions(['setError']),
     async getItems(value) {
       try {
         const { limit } = this.autocomplete.options
