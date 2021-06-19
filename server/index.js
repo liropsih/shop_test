@@ -2,7 +2,6 @@ require('dotenv').config()
 require('module-alias/register')
 const express = require('express')
 const sequelize = require('./database')
-const models = require('./models') //
 const cors = require('cors')
 const fileUpload = require('express-fileupload')
 const router = require('./routes')
@@ -32,9 +31,8 @@ const start = async () => {
     try {
         await sequelize.authenticate()
         await sequelize.sync()
-        await models.createTableRecords() //
-        app.listen(PORT, () => console.log('Express server listening on port ' + PORT))
-    } catch (e) { console.log(e) }
+        app.listen(PORT, () => console.log('\x1b[32m', 'Express server listening on port ' + PORT))
+    } catch (e) { console.log('\x1b[31m', e) }
 }
 
 start()

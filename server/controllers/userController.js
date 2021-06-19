@@ -104,6 +104,8 @@ class UserController {
     async updateUserInfo(req, res, next) {
         try {
             const errors = validationResult(req)
+            console.log(errors)
+            return
             if (!errors.isEmpty()) {
                 const message = errors.array({}).map(e => e.msg)
                 return next(ApiError.badRequest(message))
@@ -123,7 +125,7 @@ class UserController {
             next(ApiError.internal(e.message))
         }
     }
-
+///////////////
     async getUserCart(req, res, next) {
         try {
             const { id } = req.user

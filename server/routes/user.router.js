@@ -1,6 +1,7 @@
 const Router = require('express')
 const router = new Router()
 const { check } = require('express-validator')
+const moment = require('moment')
 const userController = require('@@/controllers/userController')
 const authMiddleware = require('@@/middleware/auth.middleware')
 const roleMiddleware = require('@@/middleware/role.middleware')
@@ -55,11 +56,21 @@ router.post(
         check('phone', 'Некорректно введён номер телефона')
             .isMobilePhone()
             .optional({ checkFalsy: true }),
-        check('birthdate', 'Некорректно введена дата')
+        check('birthdate')
             .isDate({
                 format: 'DD/MM/YYYY',
                 delimiters: ['/', '-', '.']
             })
+            .withMessage('Некорректно введена дата')
+            .custom((value) => {
+                const birthdate = moment(value, 'DD.MM.YYYY')
+                const thisdate = moment().hour(0).minute(0).second(0).millisecond(0)
+                const after = moment(thisdate).subtract(100, 'years')
+                const before = moment(thisdate).subtract(14, 'years')
+                const validate = (birthdate <= before) && (birthdate >= after)
+                return validate
+            })
+            .withMessage('YYYYY')
             .optional({ checkFalsy: true }),
         check('oldPassword')
             .custom((value, { req }) => (!!value === !!req.body.newPassword))
