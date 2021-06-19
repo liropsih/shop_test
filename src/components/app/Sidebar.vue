@@ -10,109 +10,56 @@
           ></a
         >
       </li>
-      <li>
+      <li v-if="sidelayout == 'default-sidelayout'">
         <Search class="hide-on-large-only" />
       </li>
-      <!-- LINKS -->
-      <router-link
-        v-for="link in links"
-        :key="link.id"
-        :to="link.url"
-        custom
-        v-slot="{ navigate, href, isActive, isExactActive }"
-      >
-        <li>
-          <collapse
-            v-if="!loading && link.cats"
-            :title="link.title"
-            :isActive="link.exact ? isExactActive : isActive"
+      <li>
+        <router-link
+          class="collapse-header waves-effect waves-red"
+          :to="{ name: 'Home' }"
+          custom
+          v-slot="{ navigate, href, isExactActive }"
+        >
+          <a @click="navigate" :href="href" :class="isExactActive && 'active'"
+            >Главная</a
           >
-            <!-- CATS -->
-            <router-link
-              v-for="cat in link.cats"
-              :key="cat.id"
-              :to="`${link.url}/${cat.id}`"
-              custom
-              v-slot="{ navigate, href, isActive }"
-            >
-              <li>
-                <collapse
-                  v-if="cat.children"
-                  :title="cat.name"
-                  :isActive="isActive"
-                >
-                  <!-- SUBCATS -->
-                  <router-link
-                    v-for="scat in cat.children"
-                    :key="scat.id"
-                    :to="`${link.url}/${cat.id}/${scat.id}`"
-                    custom
-                    v-slot="{ navigate, href, isActive }"
-                  >
-                    <li>
-                      <a
-                        :href="href"
-                        @click="navigate"
-                        class="collapse-header waves-effect waves-red"
-                        :class="isActive && 'active'"
-                        >{{ scat.name }}
-                      </a>
-                    </li>
-                  </router-link>
-                </collapse>
-                <a
-                  v-else
-                  :href="href"
-                  @click="navigate"
-                  class="collapse-header waves-effect waves-red"
-                  :class="isActive && 'active'"
-                  >{{ cat.name }}
-                </a>
-              </li>
-            </router-link>
-          </collapse>
-          <a
-            v-else
-            :href="href"
-            @click="navigate"
-            class="collapse-header waves-effect waves-red"
-            :class="(link.exact ? isExactActive : isActive) && 'active'"
-            >{{ link.title }}
-          </a>
-        </li>
-      </router-link>
+        </router-link>
+      </li>
+      <li>
+        <transition name="component-fade" mode="out-in">
+          <component :is="sidelayout" />
+        </transition>
+      </li>
     </ul>
   </div>
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex'
-import $axios from '@/http'
-import Collapse from '@/components/Collapse.vue'
+import { mapGetters } from 'vuex'
+import DefaultSidelayout from '@/components/app/Sidebar/DefaultSidelayout.vue'
+import AdminSidelayout from '@/components/app/Sidebar/AdminSidelayout.vue'
 import Search from '@/components/Search.vue'
+import $axios from '@/http'
 
 export default {
   name: 'Sidebar',
-  components: { Collapse, Search },
+  components: { DefaultSidelayout, AdminSidelayout, Search },
   data: () => ({
-    loading: true,
-    links: [
-      { id: 0, title: 'Главная', url: '/', exact: 'true' },
-      { id: 1, title: 'Каталог', url: '/items', cats: [] },
-      { id: 2, title: 'Акции', url: '/sale' }
-    ],
     Sidenav: {}
   }),
   computed: {
     ...mapGetters(['SidenavChangeState']),
-    // layout() {
-    //   return (this.$route.meta.layoutSide || 'empty') + '-layout'
-    // }
+    sidelayout() {
+      return (this.$route.meta.sidelayout || 'default') + '-sidelayout'
+    }
   },
   async mounted() {
+    // let test = await $axios.get('/api/items', {
+    //   query: {catId: '5'}
+    // })
+    // debugger
+
     this.SidenavInit(this.$refs.Sidenav)
-    await this.getCats()
-    this.loading = false
   },
   watch: {
     SidenavChangeState() {
@@ -123,15 +70,6 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['setError']),
-    async getCats() {
-      try {
-        const { data } = await $axios.get('/api/cat')
-        this.links.forEach(l => (l.url == '/items') && (l.cats = data.cats))
-      } catch (e) {
-        this.setError(e)
-      }
-    },
     SidenavInit(el) {
       M.Sidenav.init(el)
       this.Sidenav = M.Sidenav.getInstance(el)

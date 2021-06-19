@@ -1,5 +1,5 @@
 <template>
-  <div class="col s12 m6 l4 mb-3">
+  <div>
     <a class="item" href="#" @click.prevent>
       <div class="item-img">
         <img

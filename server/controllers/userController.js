@@ -47,7 +47,6 @@ class UserController {
         } catch (e) {
             next(ApiError.internal(e.message))
         }
-
     }
 
     async login(req, res, next) {
@@ -91,38 +90,6 @@ class UserController {
         }
     }
 
-    // async changePassword(req, res, next) {
-    //     try {
-    //         const errors = validationResult(req)
-    //         if (!errors.isEmpty()) {
-    //             const message = errors.array({}).map(e => e.msg)
-    //             return next(ApiError.badRequest(message))
-    //         }
-    //         const { id } = req.user
-    //         const { oldPassword, newPassword } = req.body
-    //         let user = await User.findByPk(id, {
-    //             include: Role
-    //         })
-    //         if (!user) {
-    //             return next(ApiError.badRequest('Пользователь с таким email не существует'))
-    //         }
-    //         const comparePassword = await bcrypt.compare(oldPassword, user.password)
-    //         if (!comparePassword) {
-    //             return next(ApiError.badRequest('Неверный пароль'))
-    //         }
-    //         if (!newPassword) {
-    //             return next(ApiError.badRequest('Некорректный новый пароль'))
-    //         }
-    //         const hashPassword = await bcrypt.hash(newPassword, 5)
-    //         user = await user.update({ password: hashPassword })
-    //         const roles = user.roles.map(role => role.value)
-    //         const token = generateJwt(user.id, user.name, roles)
-    //         return res.json(token)
-    //     } catch (e) {
-    //         next(ApiError.internal(e.message))
-    //     }
-    // }
-
     async getUserInfo(req, res, next) {
         try {
             const { id } = req.user
@@ -142,12 +109,13 @@ class UserController {
                 return next(ApiError.badRequest(message))
             }
             const { id } = req.user
-            const { name, lastname, patronymic, email, phone, birthdate, oldPassword, newPassword } = req.body
-            const user = await User.findByPk(id, {
-                include: Role
-            })
+            let { name, lastname, patronymic, email, phone, birthdate, oldPassword, newPassword } = req.body
+            const user = await User.findByPk(id)
             if (oldPassword && newPassword) {
                 await changePassword(user, oldPassword, newPassword, next)
+            }
+            if (user.birthdate) {
+                birthdate = undefined
             }
             await user.update({ name, lastname, patronymic, email, phone, birthdate })
             return res.json({ message: 'Данные успешно сохранены' })
@@ -215,24 +183,6 @@ class UserController {
                     : 'Роль отозвана'
                 )
             return res.json({ message })
-        } catch (e) {
-            next(ApiError.internal(e.message))
-        }
-    }
-
-    async getRoles(req, res, next) {
-        try {
-            const { email } = req.user
-            const user = await User.findOne({
-                where: { email },
-                include: Role
-            })
-            // const roles = (await user.getRoles({
-            //     attributes: ['value'],
-            //     raw: true
-            // })).map(role => role.value)
-            const roles = user.roles.map(role => role.value)
-            return res.json({ user: user.email, roles })
         } catch (e) {
             next(ApiError.internal(e.message))
         }

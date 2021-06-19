@@ -17,7 +17,7 @@ export default {
     EmptyLayout, MainLayout
   },
   computed: {
-    ...mapGetters(['error']),
+    ...mapGetters(['error', 'message']),
     layout() {
       return (this.$route.meta.layout || 'empty') + '-layout'
     }
@@ -25,7 +25,12 @@ export default {
   watch: {
     error(error) {
       if (error) {
-        this.$error(error || 'Что-то пошло не так')
+        this.$error(error)
+      }
+    },
+    message(message) {
+      if (message) {
+        this.$message(message)
       }
     }
   }

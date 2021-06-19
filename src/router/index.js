@@ -67,10 +67,80 @@ const routes = [
     name: 'Admin',
     meta: {
       layout: 'main',
-      layoutSide: 'admin',
+      sidelayout: 'admin',
       is_admin: true
     },
-    component: () => import('@/views/Admin.vue')
+    component: () => import('@/views/Admin.vue'),
+    children: [
+      {
+        path: 'items/add',
+        name: 'AdminItemsAdd',
+        meta: {
+          layout: 'main',
+          sidelayout: 'admin',
+          is_admin: true
+        },
+        component: () => import('@/views/AdminItemsAdd.vue')
+      },
+      {
+        path: 'items/edit',
+        name: 'AdminItemsEdit',
+        meta: {
+          layout: 'main',
+          sidelayout: 'admin',
+          is_admin: true
+        },
+        component: () => import('@/views/AdminItemsEdit.vue')
+      },
+      {
+        path: 'order',
+        name: 'AdminOrder',
+        meta: {
+          layout: 'main',
+          sidelayout: 'admin',
+          is_admin: true
+        },
+        component: () => import('@/views/AdminOrder.vue'),
+        children: [
+          {
+            path: 'detail',
+            name: 'AdminOrderDetail',
+            meta: {
+              layout: 'main',
+              sidelayout: 'admin',
+              is_admin: true
+            },
+            component: () => import('@/views/AdminOrderDetail.vue')
+          }
+        ]
+      },
+      {
+        path: 'roles',
+        name: 'AdminRoles',
+        children: [
+          {
+            path: 'user',
+            name: 'AdminRolesUser',
+            meta: {
+              layout: 'main',
+              sidelayout: 'admin',
+              is_admin: true
+            },
+            component: () => import('@/views/AdminRolesUser.vue')
+          },
+          {
+            path: 'edit',
+            name: 'AdminRolesEdit',
+            meta: {
+              layout: 'main',
+              sidelayout: 'admin',
+              is_admin: true
+            },
+            component: () => import('@/views/AdminRolesEdit.vue')
+          }
+        ]
+      }
+    ]
   }
 ]
 

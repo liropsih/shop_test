@@ -31,19 +31,6 @@ router.post(
             .escape()
     ],
     userController.login)
-// router.post(
-//     '/change_pass',
-//     [
-//         check('password', 'Пароль не должен быть пустым').exists().escape(),
-//         check('newPassword', 'Минимальная длина пароля 6 символов')
-//             .isLength({ min: 6 })
-//             .custom((value, { req }) => (value !== req.body.password))
-//             .withMessage('Новый пароль должен отличаться от старого')
-//             .escape(),
-//     ],
-//     authMiddleware,
-//     userController.changePassword
-// )
 router.get('/auth', authMiddleware, userController.authCheck)
 router.get('/info', authMiddleware, userController.getUserInfo)
 router.post(
@@ -94,6 +81,5 @@ router.post(
 router.get('/cart', authMiddleware, userController.getUserCart)
 router.post('/role_add', roleMiddleware, userController.userRoleAdd)
 router.post('/role_remove', roleMiddleware, userController.userRoleRemove)
-router.get('/getroles', roleMiddleware, userController.getRoles)
 
 module.exports = router

@@ -90,7 +90,7 @@
               <ul id="dropdownProfile" class="dropdown-content">
                 <li v-if="isAdmin">
                   <router-link to="/admin" class="black-text">
-                    <i class="material-icons">work</i>Админ-панель
+                    <i class="material-icons">dashboard</i>Админ-панель
                   </router-link>
                 </li>
                 <li v-if="isAdmin" class="divider"></li>

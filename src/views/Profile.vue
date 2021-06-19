@@ -108,7 +108,10 @@
             >Некорректный номер телефона</small
           >
         </div>
-        <div class="input-field col s12 m4">
+        <div
+          class="input-field col s12 m4"
+          :class="birthdateInactive && 'inactive'"
+        >
           <input
             id="birthdate"
             type="text"
@@ -123,6 +126,12 @@
             }"
           />
           <label for="birthdate">Дата рождения</label>
+          <!-- <label
+            class="label-icon right pointer"
+            for="birthdate"
+            @click="datepicker.open()"
+            ><i class="material-icons">event</i></label
+          > -->
           <small
             v-if="
               $v.birthdate.$dirty &&
@@ -130,6 +139,9 @@
             "
             class="helper-text invalid"
             >Некорректная дата</small
+          >
+          <small v-else-if="!birthdate" class="helper-text"
+            >Дату рождения нельзя будет изменить после сохранения</small
           >
         </div>
       </div>
@@ -220,8 +232,10 @@ export default {
     email: '',
     phone: '',
     birthdate: '',
+    birthdateInactive: false,
     oldPassword: '',
     newPassword: '',
+    // datepicker: {}
   }),
   validations: {
     name: { required, minLength: minLength(2) },
@@ -261,23 +275,21 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['authCheck', 'setError']),
-    dateFilter(date) {
-      const options = {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric'
-      }
-      return new Intl.DateTimeFormat('ru-RU', options).format(new Date(date))
-    },
+    ...mapActions(['authCheck', 'setError', 'setMessage']),
+    // dateFilter(date) {
+    //   const options = {
+    //     day: '2-digit',
+    //     month: '2-digit',
+    //     year: 'numeric'
+    //   }
+    //   return new Intl.DateTimeFormat('ru-RU', options).format(new Date(date))
+    // },
     datepickerInit(el) {
-      const picker = M.Datepicker.init(el, {
+      M.Datepicker.init(el, {
         firstDay: 1,
         yearRange: [new Date().getFullYear() - 100, new Date().getFullYear() - 14],
         showClearBtn: true,
         format: 'dd.mm.yyyy',
-        defaultDate: this.birthdate,
-        setDefaultDate: this.birthdate,
         i18n: {
           cancel: 'Закрыть',
           clear: 'Очистить',
@@ -339,7 +351,7 @@ export default {
           ]
         },
       })
-      console.log(picker)
+      // this.datepicker = M.Datepicker.getInstance(el)
     },
     async getUserInfo() {
       try {
@@ -349,10 +361,16 @@ export default {
         this.patronymic = data.patronymic
         this.email = data.email
         this.phone = data.phone
-        this.birthdate = this.dateFilter(data.birthdate)
+        if (data.birthdate) {
+          this.birthdate = data.birthdate
+          this.birthdateInactive = true
+        }
       } catch (e) {
         this.setError(e)
       }
+    },
+    phoneClean() {
+      return this.phone ? this.phone.replace(/[^+,0-9]/g, '') : null
     },
     async submitHandler() {
       try {
@@ -365,13 +383,14 @@ export default {
           lastname: this.lastname,
           patronymic: this.patronymic,
           email: this.email,
-          phone: this.phone.replace(/[^+,0-9]/g, ''),
-          birthdate: this.birthdate,
+          phone: this.phoneClean(),
+          birthdate: (this.birthdateInactive || !this.birthdate) ? undefined : this.birthdate, 
           oldPassword: this.oldPassword,
           newPassword: this.newPassword
         }
-        await $axios.post('/api/user/update_info', data)
+        const message = await $axios.post('/api/user/update_info', data)
         await this.authCheck()
+        this.setMessage(message)
       } catch (e) {
         this.setError(e)
       }

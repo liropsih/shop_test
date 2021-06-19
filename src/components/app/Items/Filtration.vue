@@ -1,5 +1,5 @@
 <template>
-  <form class="col s12 mb-3" v-if="!loader" @submit.prevent="applyFilters">
+  <form v-if="!loader" @submit.prevent="applyFilters">
     <p>Фильтрация</p>
     <div class="input-field">
       <v-select

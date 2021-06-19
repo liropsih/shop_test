@@ -1,14 +1,15 @@
 <template>
-  <div class="hello">
-    <h1>Welcome to administrator page</h1>
-    <h2>{{ msg }}</h2>
+  <div class="Admin">
+    <div class="page-title pb-3">
+      <h4>Панель администратора</h4>
+      <transition name="component-fade" mode="out-in">
+        <router-view />
+      </transition>
+    </div>
   </div>
 </template>
 
 <script>
 export default {
-  data: () => ({
-    msg: 'The superheros'
-  })
 }
 </script>

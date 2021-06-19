@@ -21,6 +21,7 @@
     "jsonwebtoken": "^8.5.1",
     "materialize-css": "^1.0.0",
     "module-alias": "^2.2.2",
+    "moment": "^2.29.1",
     "pg": "^8.6.0",
     "pg-hstore": "^2.3.3",
     "register-service-worker": "^1.7.1",

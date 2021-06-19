@@ -37,6 +37,26 @@ a:focus {
 .h-100 {
     height: 100%;
 }
+.pointer {
+    cursor: pointer !important;
+}
+.inactive {
+    pointer-events: none !important;
+}
+.label-icon.right {
+    left: inherit !important;
+    right: 0.75rem;
+}
+
+//Animation
+.component-fade-enter-active,
+.component-fade-leave-active {
+    transition: opacity 0.15s ease;
+}
+.component-fade-enter,
+.component-fade-leave-to {
+    opacity: 0;
+}
 
 // Navbar
 .navbar {

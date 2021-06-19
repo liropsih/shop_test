@@ -2,9 +2,14 @@
   <div>
     <Loader v-if="loader" />
     <div class="row" v-else>
-      <Filtration @applyFilters="applyFilter" />
+      <Filtration class="col s12 mb-3" @applyFilters="applyFilter" />
 
-      <ItemCard v-for="item in items" :key="item.id" :item="item" />
+      <ItemCard
+        class="col s12 m6 l4 mb-3"
+        v-for="item in items"
+        :key="item.id"
+        :item="item"
+      />
 
       <Paginate
         v-model="page"
@@ -15,7 +20,6 @@
         :container-class="'col s12 mb-3 pagination '"
         :page-class="'waves-effect'"
       />
-      
     </div>
   </div>
 </template>
@@ -103,7 +107,7 @@ export default {
       this.$router.push(`?${get}`)
       this.pageCount = Math.ceil(this.itemsCount / this.limit)
     }
-    
+
   }
 }
 </script>

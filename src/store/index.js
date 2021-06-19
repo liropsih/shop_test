@@ -10,7 +10,8 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     SidenavTrigger: true,
-    error: null
+    error: null,
+    message: null
   },
   mutations: {
     setError(state, error) {
@@ -19,14 +20,26 @@ export default new Vuex.Store({
     clearError(state) {
       state.error = null
     },
+    setMessage(state, message) {
+      state.message = message
+    },
+    clearMessage(state) {
+      state.message = null
+    },
     SidenavTrigger(state) {
       state.SidenavTrigger = !state.SidenavTrigger
     }
   },
   actions: {
-    setError(error) {
-      commit('setError', error.response.data.message)
+    setError({ commit }, error) {
+      const e = error?.response?.data?.message ? error.response.data.message : 'Что-то пошло не так'
+      commit('setError', e)
       setTimeout(() => commit('clearError'), 200)
+    },
+    setMessage({ commit }, message) {
+      const m = message?.data?.message ? message.data.message : message
+      commit('setMessage', m)
+      setTimeout(() => commit('clearMessage'), 200)
     },
     SidenavTrigger({ commit }) {
       commit('SidenavTrigger')
@@ -34,6 +47,7 @@ export default new Vuex.Store({
   },
   getters: {
     error: s => s.error,
+    message: s => s.message,
     SidenavChangeState: s => s.SidenavTrigger
   },
   modules: {

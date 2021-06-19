@@ -6,7 +6,9 @@
       <div>
         <Sidebar />
         <main>
-          <router-view />
+          <transition name="component-fade" mode="out-in">
+            <router-view />
+          </transition>
         </main>
       </div>
       <!-- <Footer /> -->
@@ -20,6 +22,7 @@ import Navbar from "@/components/app/Navbar"
 import Sidebar from "@/components/app/Sidebar"
 import Footer from "@/components/app/Footer"
 import messages from '@/utils/messages'
+
 export default {
   name: "main-layout",
   components: { Navbar, Sidebar, Footer },

@@ -1,5 +1,6 @@
 const sequelize = require('@@/database')
 const { DataTypes } = require('sequelize')
+const moment = require('moment')
 
 const User = sequelize.define(
     'user', {
@@ -10,7 +11,21 @@ const User = sequelize.define(
     lastname: { type: DataTypes.STRING },
     patronymic: { type: DataTypes.STRING },
     phone: { type: DataTypes.STRING },
-    birthdate: { type: DataTypes.DATE }
+    birthdate: {
+        type: DataTypes.DATEONLY,
+        get() {
+            const date = this.getDataValue('birthdate')
+            if (date) {
+                return moment(date).format('DD.MM.YYYY')
+            } else {
+                return date
+            }
+        },
+        set(value) {
+            const date = moment(value, 'DD.MM.YYYY')
+            this.setDataValue('birthdate', date)
+        }
+    }
 })
 
 const Role = sequelize.define(
@@ -31,12 +46,14 @@ const Request = sequelize.define(
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     name: { type: DataTypes.STRING, unique: true, allowNull: false },
     value: { type: DataTypes.STRING, unique: true, allowNull: false }
-})
+},
+    { timestamps: false })
 
 const RequestRole = sequelize.define(
     'request_role', {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true }
-})
+},
+    { timestamps: false })
 
 const Cart = sequelize.define(
     'cart', {
@@ -124,9 +141,6 @@ Role.belongsToMany(Request, { through: RequestRole })
 User.hasMany(Rating)
 Rating.belongsTo(User)
 
-// Cart.hasMany(CartItem)
-// CartItem.belongsTo(Cart)
-
 Cat.hasMany(Cat, {
     onDelete: 'cascade',
     foreignKey: 'parentId',
@@ -142,16 +156,11 @@ Item.belongsTo(Brand)
 Item.hasMany(Rating)
 Rating.belongsTo(Item)
 
-// Item.hasMany(CartItem)
-// CartItem.belongsTo(Item)
-
 Item.hasMany(ItemInfo, { as: 'info' })
 ItemInfo.belongsTo(Item)
 
 Item.belongsToMany(Brand, { through: ItemBrand })
 Brand.belongsToMany(Item, { through: ItemBrand })
-
-
 
 
 async function createTabRec(table, value, name) {
@@ -175,14 +184,13 @@ async function createCat(name, parentId) {
 }
 
 async function createTableRecords() {
-    // await createTabRec(Role, 'User')
     await createTabRec(Role, 'Admin')
     let user = await User.findOne({ where: { email: 'aa@aa.aa' } })
     let adminRole = await Role.findOne({ where: { value: 'Admin' } })
     if (!user) {
         user = await User.create({ name: 'Admin', email: 'aa@aa.aa', password: '$2b$05$EjKH9/mDP5RojK34aAXrMus6CWU/.FLu92WuO4.Nn489R6Bspvy3S' })
         await user.addRole(adminRole)
-        await user.addCart()
+        await user.createCart()
     }
 
     await createCat('Смартфоны и гаджеты') // 1
@@ -218,7 +226,7 @@ async function createTableRecords() {
     await createCat('Микроволновые печи', 5)
     await createCat('Пылесосы', 5)
 
-    
+
     await Brand.findOrCreate({ where: { name: 'Lenovo' } })
     await Brand.findOrCreate({ where: { name: 'LG' } })
     await Brand.findOrCreate({ where: { name: 'Samsung' } })
