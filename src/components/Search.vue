@@ -45,6 +45,9 @@ export default {
     })
     this.autocomplete = M.Autocomplete.getInstance(this.$refs.search)
   },
+  destroyed() {
+    this.autocomplete?.destroy && this.autocomplete.destroy()
+  },
   methods: {
     ...mapActions(['setError']),
     async getItems(value) {

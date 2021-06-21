@@ -69,6 +69,9 @@ export default {
       val ? this.Sidenav.close() : this.Sidenav.open()
     }
   },
+  destroyed() {
+    this.Sidenav?.destroy && this.Sidenav.destroy()
+  },
   methods: {
     SidenavInit(el) {
       M.Sidenav.init(el)

@@ -235,7 +235,7 @@ export default {
     birthdateInactive: false,
     oldPassword: '',
     newPassword: '',
-    // datepicker: {}
+    datepicker: {}
   }),
   validations: {
     name: { required, minLength: minLength(2) },
@@ -258,7 +258,6 @@ export default {
     setTimeout(() => {
       M.updateTextFields()
     })
-    this.datepickerInit(this.$refs.datepicker)
   },
   watch: {
     phone(value) {
@@ -273,6 +272,9 @@ export default {
         this.phone = val
       }
     }
+  },
+  destroyed() {
+    this.datepicker?.destroy && this.datepicker.destroy()
   },
   methods: {
     ...mapActions(['authCheck', 'setError', 'setMessage']),
@@ -351,7 +353,7 @@ export default {
           ]
         },
       })
-      // this.datepicker = M.Datepicker.getInstance(el)
+      this.datepicker = M.Datepicker.getInstance(el)
     },
     async getUserInfo() {
       try {
@@ -364,6 +366,8 @@ export default {
         if (data.birthdate) {
           this.birthdate = data.birthdate
           this.birthdateInactive = true
+        } else {
+          this.datepickerInit(this.$refs.datepicker)
         }
       } catch (e) {
         this.setError(e)
@@ -384,11 +388,12 @@ export default {
           patronymic: this.patronymic,
           email: this.email,
           phone: this.phoneClean(),
-          birthdate: (this.birthdateInactive || !this.birthdate) ? undefined : this.birthdate, 
+          birthdate: (this.birthdateInactive || !this.birthdate) ? undefined : this.birthdate,
           oldPassword: this.oldPassword,
           newPassword: this.newPassword
         }
         const message = await $axios.post('/api/user/update_info', data)
+        this.birthdateInactive = !!this.birthdate
         await this.authCheck()
         this.setMessage(message)
       } catch (e) {
