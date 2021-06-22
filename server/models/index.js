@@ -50,9 +50,7 @@ const Request = sequelize.define(
     { timestamps: false })
 
 const RequestRole = sequelize.define(
-    'request_role', {
-    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true }
-},
+    'request_role', { id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true } },
     { timestamps: false })
 
 const Cart = sequelize.define(

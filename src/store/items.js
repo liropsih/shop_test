@@ -5,7 +5,8 @@ export default {
         items: [],
         itemsCount: 0,
         // searchItems: [],
-        brands: null
+        brands: null,
+        cats: null
     },
     mutations: {
         getItems(state, items) {
@@ -17,7 +18,10 @@ export default {
         // },
         getBrands(state, data) {
             state.brands = data.brands
-        }
+        },
+        getCats(state, data) {
+            state.cats = data.cats
+        },
     },
     actions: {
         async getItems({ commit, dispatch }, { catId, get }) {
@@ -43,12 +47,21 @@ export default {
             } catch (e) {
                 dispatch('setError', e)
             }
+        },
+        async getCats({ commit, dispatch }) {
+            try {
+                const { data } = await $axios.get(`/api/cat`)
+                commit('getCats', data)
+            } catch (e) {
+                dispatch('setError', e)
+            }
         }
     },
     getters: {
         items: s => s.items,
         itemsCount: s => s.itemsCount,
         // searchItems: s => s.searchItems,
-        brands: s => s.brands
+        brands: s => s.brands,
+        cats: s => s.cats
     }
 }

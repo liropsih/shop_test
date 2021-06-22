@@ -59,7 +59,7 @@ class RequestController {
             if (request) { roles = request.roles.map(role => role.value) }
             return roles
         } catch (e) {
-            throw (e)
+            throw e
         }
     }
 

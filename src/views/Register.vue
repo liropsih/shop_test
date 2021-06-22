@@ -123,7 +123,7 @@
 </template>
 
 <script>
-import messages from '@/utils/messages'
+// import messages from '@/utils/messages'
 import { email, required, minLength, sameAs } from 'vuelidate/lib/validators'
 import { mapActions } from 'vuex'
 
@@ -148,11 +148,11 @@ export default {
     passwordConfirm: { required, minLength: minLength(6), sameAs: sameAs(function () { return this.password }) },
     agree: { checked: v => v }
   },
-  mounted() {
-    if (messages[this.$route.query.message]) {
-      this.$message(messages[this.$route.query.message])
-    }
-  },
+  // mounted() {
+  //   if (messages[this.$route.query.message]) {
+  //     this.$message(messages[this.$route.query.message])
+  //   }
+  // },
   methods: {
     ...mapActions(['register']),
     async registerHandler() {

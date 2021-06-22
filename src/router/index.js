@@ -8,7 +8,10 @@ const routes = [
   {
     path: '/',
     name: 'Home',
-    meta: { layout: 'main' },
+    meta: {
+      layout: 'main',
+      title: 'Главная страница'
+    },
     component: () => import('@/views/Home.vue')
   },
   {
@@ -32,7 +35,10 @@ const routes = [
   {
     path: '/sale',
     name: 'Sale',
-    meta: { layout: 'main' },
+    meta: {
+      layout: 'main',
+      title: 'Акции'
+    },
     component: () => import('@/views/Sale.vue')
   },
   {
@@ -40,7 +46,8 @@ const routes = [
     name: 'Login',
     meta: {
       layout: 'empty',
-      is_guest: true
+      is_guest: true,
+      title: 'Авторизация'
     },
     component: () => import('@/views/Login.vue')
   },
@@ -49,7 +56,8 @@ const routes = [
     name: 'Register',
     meta: {
       layout: 'empty',
-      is_guest: true
+      is_guest: true,
+      title: 'Регистрация'
     },
     component: () => import('@/views/Register.vue')
   },
@@ -58,29 +66,47 @@ const routes = [
     name: 'Profile',
     meta: {
       layout: 'main',
-      is_auth: true
+      is_auth: true,
+      title: 'Профиль'
     },
     component: () => import('@/views/Profile.vue')
   },
   {
     path: '/admin',
+    redirect: { name: 'AdminDashboard' },
     name: 'Admin',
     meta: {
       layout: 'main',
       sidelayout: 'admin',
       is_admin: true
     },
-    component: () => import('@/views/Admin.vue'),
+    component: () => import('@/views/Admin/Admin.vue'),
     children: [
+      {
+        path: ' ',
+        name: 'AdminDashboard',
+        meta: {
+          layout: 'main',
+          sidelayout: 'admin',
+          is_admin: true,
+          title: 'Информация'
+        },
+        component: () => import('@/views/Admin/AdminDashboard.vue'),
+      },
+      {
+        path: 'items',
+        name: 'AdminItems',
+      },
       {
         path: 'items/add',
         name: 'AdminItemsAdd',
         meta: {
           layout: 'main',
           sidelayout: 'admin',
-          is_admin: true
+          is_admin: true,
+          title: 'Добавление товара'
         },
-        component: () => import('@/views/AdminItemsAdd.vue')
+        component: () => import('@/views/Admin/AdminItemsAdd.vue')
       },
       {
         path: 'items/edit',
@@ -88,9 +114,32 @@ const routes = [
         meta: {
           layout: 'main',
           sidelayout: 'admin',
-          is_admin: true
+          is_admin: true,
+          title: 'Редактирование товара'
         },
-        component: () => import('@/views/AdminItemsEdit.vue')
+        component: () => import('@/views/Admin/AdminItemsEdit.vue')
+      },
+      {
+        path: 'items/catsEdit',
+        name: 'AdminCatsEdit',
+        meta: {
+          layout: 'main',
+          sidelayout: 'admin',
+          is_admin: true,
+          title: 'Редактирование товара'
+        },
+        component: () => import('@/views/Admin/AdminCatsEdit.vue')
+      },
+      {
+        path: 'items/brandsEdit',
+        name: 'AdminBrandsEdit',
+        meta: {
+          layout: 'main',
+          sidelayout: 'admin',
+          is_admin: true,
+          title: 'Редактирование товара'
+        },
+        component: () => import('@/views/Admin/AdminBrandsEdit.vue')
       },
       {
         path: 'order',
@@ -98,49 +147,42 @@ const routes = [
         meta: {
           layout: 'main',
           sidelayout: 'admin',
-          is_admin: true
+          is_admin: true,
+          title: 'Управление заказами'
         },
-        component: () => import('@/views/AdminOrder.vue'),
-        children: [
-          {
-            path: 'detail',
-            name: 'AdminOrderDetail',
-            meta: {
-              layout: 'main',
-              sidelayout: 'admin',
-              is_admin: true
-            },
-            component: () => import('@/views/AdminOrderDetail.vue')
-          }
-        ]
+        component: () => import('@/views/Admin/AdminOrder.vue')
+      },
+      {
+        path: 'order/:id',
+        name: 'AdminOrderDetail',
+        meta: {
+          layout: 'main',
+          sidelayout: 'admin',
+          is_admin: true,
+          title: 'Информация о заказе'
+        },
+        component: () => import('@/views/Admin/AdminOrderDetail.vue')
       },
       {
         path: 'roles',
         name: 'AdminRoles',
-        children: [
-          {
-            path: 'user',
-            name: 'AdminRolesUser',
-            meta: {
-              layout: 'main',
-              sidelayout: 'admin',
-              is_admin: true
-            },
-            component: () => import('@/views/AdminRolesUser.vue')
-          },
-          {
-            path: 'edit',
-            name: 'AdminRolesEdit',
-            meta: {
-              layout: 'main',
-              sidelayout: 'admin',
-              is_admin: true
-            },
-            component: () => import('@/views/AdminRolesEdit.vue')
-          }
-        ]
+        meta: {
+          layout: 'main',
+          sidelayout: 'admin',
+          is_admin: true,
+          title: 'Управление доступом'
+        },
+        component: () => import('@/views/Admin/AdminRoles.vue')
+      },
+      {
+        path: '*',
+        redirect: { name: 'AdminDashboard' },
       }
     ]
+  },
+  {
+    path: '*',
+    redirect: { name: 'Home' },
   }
 ]
 

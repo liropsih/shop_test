@@ -14,7 +14,7 @@
           <router-link
             v-for="child in link.child"
             :key="child.id"
-            :to="{ name: child.route, query: {test: ['TEST', 'TEST2']} }"
+            :to="{ name: child.route, query: { test: ['TEST', 'TEST2'] } }"
             custom
             v-slot="{ navigate, href, isActive }"
           >
@@ -49,19 +49,17 @@ export default {
   components: { Collapse },
   data: () => ({
     links: [
+      { id: 0, title: 'Панель администратора', route: 'AdminDashboard' },
       {
         id: 1, title: 'Управление товаром', route: 'AdminItems', child: [
-          { id: 0, title: 'Добавление товара', route: 'AdminItemsAdd' },
-          { id: 2, title: 'Редактирование товара', route: 'AdminItemsEdit' }
+          { id: 0, title: 'Добавить товар', route: 'AdminItemsAdd' },
+          { id: 1, title: 'Редактировать товар', route: 'AdminItemsEdit' },
+          { id: 2, title: 'Редактировать категории', route: 'AdminCatsEdit' },
+          { id: 3, title: 'Редактировать брэнды', route: 'AdminBrandsEdit' }
         ]
       },
       { id: 2, title: 'Управление заказами', route: 'AdminOrder' },
-      {
-        id: 3, title: 'Управление доступом', route: 'AdminRoles', child: [
-          { id: 0, title: 'Назначение прав', route: 'AdminRolesUser' },
-          { id: 1, title: 'Редактирование прав', route: 'AdminRolesEdit' }
-        ]
-      }
+      { id: 3, title: 'Управление доступом', route: 'AdminRoles' }
     ]
   })
 }

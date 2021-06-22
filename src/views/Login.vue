@@ -61,7 +61,7 @@
 
 <script>
 import { email, required } from 'vuelidate/lib/validators'
-import messages from '@/utils/messages'
+// import messages from '@/utils/messages'
 import { mapActions } from 'vuex'
 export default {
   //   metaInfo () {
@@ -78,11 +78,11 @@ export default {
     email: { email, required },
     password: { required }
   },
-  mounted() {
-    if (messages[this.$route.query.message]) {
-      this.$message(messages[this.$route.query.message])
-    }
-  },
+  // mounted() {
+  //   if (messages[this.$route.query.message]) {
+  //     this.$message(messages[this.$route.query.message])
+  //   }
+  // },
   methods: {
     ...mapActions(['login']),
     async loginHandler() {

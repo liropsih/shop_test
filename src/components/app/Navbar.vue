@@ -22,7 +22,7 @@
         </div>
         <div class="col s5 m5 l3 right">
           <ul class="right">
-              <!-- Dropdown Cart -->
+            <!-- Dropdown Cart -->
             <li v-if="isLoggedIn">
               <a
                 class="dropdown-trigger no-autoinit"
@@ -83,13 +83,18 @@
                 data-target="dropdownProfile"
                 ref="dropdownProfile"
               >
-                <span class="hide-on-small-and-down">{{ username || "Авторизация" }}</span>
+                <span class="hide-on-small-and-down">{{
+                  username || "Авторизация"
+                }}</span>
                 <!-- <i class="material-icons right">person</i> -->
                 <i class="material-icons right">input</i>
               </a>
               <ul id="dropdownProfile" class="dropdown-content">
                 <li v-if="isAdmin">
-                  <router-link to="/admin" class="black-text">
+                  <router-link
+                    :to="{ name: 'AdminDashboard' }"
+                    class="black-text"
+                  >
                     <i class="material-icons">dashboard</i>Админ-панель
                   </router-link>
                 </li>

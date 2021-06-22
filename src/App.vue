@@ -10,6 +10,7 @@
 import { mapGetters } from 'vuex'
 import EmptyLayout from '@/layouts/EmptyLayout'
 import MainLayout from '@/layouts/MainLayout'
+import messages from '@/utils/messages'
 
 export default {
   name: 'App',
@@ -20,6 +21,9 @@ export default {
     ...mapGetters(['error', 'message']),
     layout() {
       return (this.$route.meta.layout || 'empty') + '-layout'
+    },
+    queryMessage() {
+      return this.$route.query.message
     }
   },
   watch: {
@@ -31,6 +35,11 @@ export default {
     message(message) {
       if (message) {
         this.$message(message)
+      }
+    },
+    queryMessage(queryMessage) {
+      if (messages[queryMessage]) {
+        this.$message(messages[queryMessage])
       }
     }
   }

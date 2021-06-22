@@ -22,7 +22,7 @@ const changePassword = async (user, oldPassword, newPassword, next) => {
         await user.update({ password: hashPassword })
         return
     } catch (e) {
-        throw (e)
+        throw e
     }
 }
 

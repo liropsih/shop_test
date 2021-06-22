@@ -47,6 +47,10 @@ a:focus {
     left: inherit !important;
     right: 0.75rem;
 }
+.uploading-image {
+    max-width: 200px;
+    max-height: 200px;
+}
 
 //Animation
 .component-fade-enter-active,

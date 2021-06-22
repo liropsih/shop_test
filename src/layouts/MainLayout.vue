@@ -21,7 +21,7 @@ import { mapGetters, mapActions } from 'vuex'
 import Navbar from "@/components/app/Navbar"
 import Sidebar from "@/components/app/Sidebar"
 import Footer from "@/components/app/Footer"
-import messages from '@/utils/messages'
+// import messages from '@/utils/messages'
 
 export default {
   name: "main-layout",
@@ -31,26 +31,26 @@ export default {
   }),
   computed: {
     ...mapGetters(['isLoggedIn']),
-    message() {
-      return this.$route.query.message
-    }
+    // message() {
+    //   return this.$route.query.message
+    // }
   },
   watch: {
     // error(error) {
     //   this.$error(messages[error] || 'Что-то пошло не так')
     // },
-    message(message) {
-      this.$message(messages[message])
-    }
+    // message(message) {
+    //   this.$message(messages[message])
+    // }
   },
   async mounted() {
     if (this.isLoggedIn) {
       await this.authCheck()
     }
     this.loading = false
-    if (messages[this.$route.query.message]) {
-      this.$message(messages[this.$route.query.message])
-    }
+    // if (messages[this.$route.query.message]) {
+    //   this.$message(messages[this.$route.query.message])
+    // }
   },
   methods: {
     ...mapActions(['authCheck'])
