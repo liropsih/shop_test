@@ -72,8 +72,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
-import $axios from '@/http'
+import { mapActions, mapGetters } from 'vuex'
 import Collapse from '@/components/Collapse.vue'
 
 export default {
@@ -86,20 +85,16 @@ export default {
       { id: 1, title: 'Акции', url: '/sale' }
     ]
   }),
+  computed: {
+    ...mapGetters(['cats'])
+  },
   async mounted() {
     await this.getCats()
+    this.links.forEach(l => (l.url == '/items') && (l.cats = this.cats))
     this.loading = false
   },
   methods: {
-    ...mapActions(['setError']),
-    async getCats() {
-      try {
-        const { data } = await $axios.get('/api/cat')
-        this.links.forEach(l => (l.url == '/items') && (l.cats = data.cats))
-      } catch (e) {
-        this.setError(e)
-      }
-    }
+    ...mapActions(['setError', 'getCats'])
   }
 }
 </script>
