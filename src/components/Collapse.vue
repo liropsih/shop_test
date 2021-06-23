@@ -1,5 +1,4 @@
 <template>
-  <!-- <div class="collapse" :class="isOpen && 'active'"> -->
   <div class="collapse" :class="isActive && 'active'">
     <a
       href="#"
@@ -13,7 +12,7 @@
     <transition name="collapse">
       <ul
         class="collapse-body"
-        :style="`--count: ${computedCount}; --height: ${computedHeight}`"
+        :style="`--height: ${computedHeight}`"
         v-show="isOpen"
         ref="collapse"
       >
@@ -35,31 +34,31 @@ export default {
     }
   },
   data: () => ({
-    computedCount: 0,
     computedHeight: 'auto',
     isOpen: false,
   }),
   watch: {
     isOpen(val) {
-      if (!val) {this.initHeight(this.$refs.collapse)}
+      this.initHeight(this.$refs.collapse, val)
     },
     isActive(val) {
-      if (!val) {
-        this.isOpen = false
-      }
+      !val && (this.isOpen = false)
     }
   },
   mounted() {
     this.isOpen = this.isActive
-    this.initCount(this.$refs.collapse)
   },
   methods: {
-    initCount(el) {
-      this.computedCount = el.children.length
-    },
-    initHeight(el) {
-      const height = getComputedStyle(el).height
-      this.computedHeight = height
+    initHeight(el, val) {
+      if (val) {
+        el.style.visibility = 'hidden'
+        el.style.display = 'block'
+      }
+      this.computedHeight = getComputedStyle(el).height
+      if (val) {
+        el.style.display = 'none'
+        el.style.visibility = 'visible'
+      }
     }
   }
 }

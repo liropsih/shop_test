@@ -69,27 +69,46 @@
             </div>
           </div>
           <div class="col s12">
-            <div class="row" v-for="(infoSingle, idx) in info" :key="idx">
+            <p>Характеристики</p>
+            <div class="row mb-0" v-for="(infoSingle, idx) in info" :key="idx">
               <div class="input-field col s12 m6">
-                <input type="text" :id="`title-${idx}`" v-model="info[idx].title" />
+                <input
+                  type="text"
+                  :id="`title-${idx}`"
+                  v-model="info[idx].title"
+                />
                 <label :for="`title-${idx}`">Название свойства</label>
               </div>
               <div class="input-field col s12 m6">
-                <input type="text" :id="`description-${idx}`" v-model="info[idx].description" />
+                <input
+                  type="text"
+                  :id="`description-${idx}`"
+                  v-model="info[idx].description"
+                />
                 <label :for="`description-${idx}`">Значение</label>
+                <label
+                  class="label-icon right pointer"
+                  @click="removeInfo(idx)"
+                >
+                  <i class="material-icons">delete</i>
+                </label>
               </div>
             </div>
           </div>
           <div class="col s12">
             <button
-              class="btn waves-effect waves-light red lighten-1"
+              class="
+                btn-floating btn-small
+                waves-effect waves-light
+                red
+                lighten-1
+              "
               @click.prevent="addInfo()"
             >
-              Добавить свойство
-              <i class="material-icons right">send</i>
+              <i class="material-icons">add</i>
             </button>
           </div>
-          <div class="col s12 mt-3">
+          <div class="col s12 mt-5">
             <button
               class="btn waves-effect waves-light red lighten-1"
               type="submit"
@@ -106,7 +125,7 @@
 
 <script>
 import $axios from '@/http'
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 export default {
   name: 'AdminItemsAdd',
   data: () => ({
@@ -122,12 +141,7 @@ export default {
     imgPreview: null
   }),
   computed: {
-    brands() {
-      return this.$store.getters.brands
-    },
-    cats() {
-      return this.$store.getters.cats
-    },
+    ...mapGetters(['brands', 'cats']),
     title() {
       return this.$route.meta.title
     }
@@ -161,7 +175,22 @@ export default {
       this.imgPreview = URL.createObjectURL(this.img)
     },
     addInfo() {
-      this.info = [...this.info, { title: '', description: '' }]
+      this.info.push({ title: '', description: '' })
+    },
+    removeInfo(idx) {
+      this.info.splice(idx, 1)
+    },
+    clearData() {
+      this.name = null
+      this.price = null
+      this.count = null
+      this.brandId = null
+      this.catId = null
+      this.subcatId = null
+      this.img = null
+      this.info = []
+      this.subcats = null
+      this.imgPreview = null
     },
     async submitHandler() {
       try {
@@ -175,6 +204,7 @@ export default {
         !!this.info.length && data.append('info', JSON.stringify(this.info))
         const message = await $axios.post('/api/item/add', data)
         this.setMessage(message)
+        this.clearData()
       } catch (e) {
         this.setError(e)
       }

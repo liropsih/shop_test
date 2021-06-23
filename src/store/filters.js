@@ -13,10 +13,10 @@ export default {
         }
     },
     actions: {
-        async getBrandsFilter({ commit, dispatch }, id) {
+        async getBrandsFilter({ commit, dispatch }, brandId) {
             try {
-                const { data } = await $axios.get(`/api/brand?${id}`)
-                commit('setBrandsFilter', data)
+                const { data } = await $axios.get(`/api/brand`, { params: { brandId } })
+                commit('setBrandsFilter', data.brands)
             } catch (e) {
                 dispatch('setError', e)
             }

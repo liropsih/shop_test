@@ -16,22 +16,26 @@ const routes = [
   },
   {
     path: '/items',
-    name: 'Item-link',
-    meta: { layout: 'main' },
-    component: () => import('@/views/Items.vue')
+    name: 'Items-link',
+    redirect: { name: 'Home' },
   },
   {
-    path: '/items/:id',
+    path: '/items/:parentId',
     name: 'Items-catLink',
-    meta: { layout: 'main' },
-    component: () => import('@/views/Items.vue')
+    redirect: { name: 'Home' },
   },
   {
-    path: '/items/:id/:subId',
-    name: 'Items-subCatLink',
+    path: '/items/:parentId/:catId',
+    name: 'Items',
     meta: { layout: 'main' },
     component: () => import('@/views/Items.vue')
   },
+  // {
+  //   path: '/items/:id/:subId',
+  //   name: 'Items-subCatLink',
+  //   meta: { layout: 'main' },
+  //   component: () => import('@/views/Items.vue')
+  // },
   {
     path: '/sale',
     name: 'Sale',
@@ -96,6 +100,7 @@ const routes = [
       {
         path: 'items',
         name: 'AdminItems',
+        redirect: { name: 'AdminDashboard' }
       },
       {
         path: 'items/add',
@@ -126,7 +131,7 @@ const routes = [
           layout: 'main',
           sidelayout: 'admin',
           is_admin: true,
-          title: 'Редактирование товара'
+          title: 'Редактирование категорий'
         },
         component: () => import('@/views/Admin/AdminCatsEdit.vue')
       },
@@ -137,7 +142,7 @@ const routes = [
           layout: 'main',
           sidelayout: 'admin',
           is_admin: true,
-          title: 'Редактирование товара'
+          title: 'Редактирование брэндов'
         },
         component: () => import('@/views/Admin/AdminBrandsEdit.vue')
       },

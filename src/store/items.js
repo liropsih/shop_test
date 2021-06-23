@@ -14,7 +14,7 @@ export default {
             state.itemsCount = items.count
         },
         // searchItems(state, searchItems) {
-            // state.searchItems = searchItems
+        // state.searchItems = searchItems
         // },
         getBrands(state, data) {
             state.brands = data.brands
@@ -24,9 +24,9 @@ export default {
         },
     },
     actions: {
-        async getItems({ commit, dispatch }, { catId, get }) {
+        async getItems({ commit, dispatch }, { catId, params }) {
             try {
-                const { data } = await $axios.get(`/api/item/get/${catId}?${get}`)
+                const { data } = await $axios.get(`/api/item/get/${catId}`, { params })
                 commit('getItems', data)
             } catch (e) {
                 dispatch('setError', e)
@@ -43,6 +43,15 @@ export default {
         async getBrands({ commit, dispatch }) {
             try {
                 const { data } = await $axios.get(`/api/brand`)
+                data.brands.sort((a, b) => {
+                    if (a.name > b.name) {
+                        return 1
+                    }
+                    if (a.name < b.name) {
+                        return -1
+                    }
+                    return 0
+                })
                 commit('getBrands', data)
             } catch (e) {
                 dispatch('setError', e)
@@ -51,6 +60,26 @@ export default {
         async getCats({ commit, dispatch }) {
             try {
                 const { data } = await $axios.get(`/api/cat`)
+                data.cats.sort((a, b) => {
+                    if (a.name > b.name) {
+                        return 1
+                    }
+                    if (a.name < b.name) {
+                        return -1
+                    }
+                    return 0
+                })
+                data.cats.forEach(cat => {
+                    cat.children.sort((a, b) => {
+                        if (a.name > b.name) {
+                            return 1
+                        }
+                        if (a.name < b.name) {
+                            return -1
+                        }
+                        return 0
+                    })
+                })
                 commit('getCats', data)
             } catch (e) {
                 dispatch('setError', e)

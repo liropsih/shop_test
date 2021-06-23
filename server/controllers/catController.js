@@ -6,8 +6,8 @@ class CatController {
         console.log(req.body)
         try {
             const { name, parentId } = req.body
-            const cat = await Cat.create({ name, parentId })
-            return res.json({ cat })
+            await Cat.create({ name, parentId })
+            return res.json({ message: `${parentId ? 'Подкатегория' : 'Категория'} "${name}" добавлена` })
         } catch (e) {
             next(ApiError.internal(e.message))
         }
@@ -21,7 +21,7 @@ class CatController {
                 return next(ApiError.badRequest('Категория не найдена'))
             }
             cat = await cat.update({ name, parentId })
-            return res.json({ cat })
+            return res.json({ message: `${parentId ? 'Подкатегория' : 'Категория'} обновлена` })
         } catch (e) {
             next(ApiError.internal(e.message))
         }
@@ -35,7 +35,7 @@ class CatController {
                 return next(ApiError.badRequest('Категория не найдена'))
             }
             await cat.destroy()
-            return res.json({ message: 'Категория удалена' })
+            return res.json({ message: `${cat.parentId ? 'Подкатегория' : 'Категория'} "${cat.name}" удалена` })
         } catch (e) {
             next(ApiError.internal(e.message))
         }

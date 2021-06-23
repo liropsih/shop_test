@@ -46,6 +46,10 @@ a:focus {
 .label-icon.right {
     left: inherit !important;
     right: 0.75rem;
+
+    &:hover {
+        color: #ef5350;
+    }
 }
 .uploading-image {
     max-width: 200px;
@@ -239,10 +243,11 @@ a:focus {
         //     li.open > .collapse-body {
         //         display: block !important;
         //     }
-        &-enter-to {
-            height: calc(#{$sidenav-item-height} * var(--count));
-        }
+        // &-enter-to {
+        //     height: calc(#{$sidenav-item-height} * var(--count));
+        // }
 
+        &-enter-to,
         &-leave {
             height: var(--height);
         }

@@ -1,7 +1,7 @@
 <template>
   <div>
     <Loader v-if="loader" />
-    <div class="row" v-else>
+    <div v-else class="row">
       <Filtration class="col s12 mb-3" @applyFilters="applyFilter" />
 
       <ItemCard
@@ -25,75 +25,72 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 import Filtration from '@/components/app/Items/Filtration'
 import ItemCard from '@/components/app/Items/ItemCard'
+
 export default {
   name: 'Items',
   components: { ItemCard, Filtration },
   data: () => ({
-    page: 1,
     pageCount: 0,
-    limit: 12,
-    catId: '',
-    brandId: '',
     loader: false
   }),
   computed: {
-    ...mapGetters(['items', 'itemsCount', 'brands']),
+    ...mapGetters(['items', 'itemsCount']),
+    catId() { return +this.$route.params.catId },
+    page() { return +this.$route.query.page || 1 },
+    limit() { return +this.$route.query.limit || 12 },
+    brandId() { return this.$route.query.brandId },
     brandsFilter: {
       get() {
         return this.$store.getters.brandsFilter
       },
       set(brandsFilter) {
-        this.$store.dispatch('setBrandsFilter', brandsFilter)
+        this.setBrandsFilter(brandsFilter)
       }
     }
   },
   async mounted() {
-    this.catId = +this.$route.params.id
-    this.brandId = this.$route.query.brandId || ''
-    this.page = +this.$route.query.page || 1
-    this.limit = +this.$route.query.limit || 12
+    // this.paramsInit()
+    // this.loader = false
     await this.setupPagination()
-    this.loader = false
   },
+  watch: {
+    $route: 'setupPagination'
+  },
+  // async beforeRouteUpdate(to, from, next) {
+  //   await this.setupPagination()
+  //   next()
+  // },
   methods: {
-    toGet(data) {
-      return Object.keys(data).map(key => {
-        if (Array.isArray(data[key])) {
-          return data[key].map((value) => `${key}=${value}`).join('&')
-        } else { return `${key}=${data[key]}` }
-      }).join('&')
-    },
-
+    ...mapActions(['getBrandsFilter', 'setBrandsFilter']),
     async getItems() {
-      const data = {
-        brandId: this.brandId,
-        page: this.page,
-        limit: this.limit
-      }
-      const get = this.toGet(data)
       await this.$store.dispatch('getItems', {
         catId: this.catId,
-        get
+        params: this.$route.query
       })
-      return get
     },
 
     async setupPagination() {
       if (this.brandId) {
-        const id = this.toGet({ id: this.brandId })
-        await this.$store.dispatch('getBrandsFilter', id)
+        await this.getBrandsFilter(this.brandId)
       }
       await this.getItems()
       this.pageCount = Math.ceil(this.itemsCount / this.limit)
     },
+
     async pageChangeHandler(page) {
-      this.brandId = this.brandsFilter.map(b => b.id)
-      this.page = page
-      const get = await this.getItems()
-      this.$router.push(`?${get}`)
+      this.$router.push({
+        name: 'Items',
+        params: { catId: this.catId },
+        query: {
+          page,
+          limit: this.limit,
+          brandId: this.brandId,
+        }
+      })
+      await this.getItems()
       window.scroll({
         top: 0,
         behavior: 'smooth'
@@ -101,13 +98,22 @@ export default {
     },
 
     async applyFilter() {
-      this.brandId = this.brandsFilter.map(b => b.id)
-      this.page = 1
-      const get = await this.getItems()
-      this.$router.push(`?${get}`)
+      this.$router.push({
+        name: 'Items',
+        params: { catId: this.catId },
+        query: {
+          page: 1,
+          limit: this.limit,
+          brandId: this.brandsFilter.map(b => b.id),
+        }
+      })
+      await this.getItems()
+      window.scroll({
+        top: 0,
+        behavior: 'smooth'
+      })
       this.pageCount = Math.ceil(this.itemsCount / this.limit)
     }
-
   }
 }
 </script>

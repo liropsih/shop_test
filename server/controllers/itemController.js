@@ -41,7 +41,7 @@ class ItemController {
 
     async update(req, res, next) {
         try {
-            let { id, name, price, oldPrice, count, sale, tag, brandId, catId, info } = req.body
+            let { id, name, price, oldPrice, count, sale, sale_tag, brandId, catId, info } = req.body
             const item = await Item.findByPk(id)
             let img
             let fileName
@@ -61,7 +61,7 @@ class ItemController {
             }
             if (info) {
                 info = JSON.parse(info)
-                await item.removeInfos()
+                ItemInfo.destroy({ where: { itemId: item.id } })
                 info.forEach(async i => {
                     try {
                         await item.createInfo({
@@ -73,7 +73,7 @@ class ItemController {
                     }
                 })
             }
-            await item.update({ name, price, oldPrice, count, sale, tag, brandId, catId, img: fileName })
+            await item.update({ name, price, oldPrice, count, sale, sale_tag, brandId, catId, img: fileName })
             return res.json({ message: 'Информация обновлена' })
         } catch (e) {
             next(ApiError.internal(e.message))
@@ -116,13 +116,20 @@ class ItemController {
         return res.json(items)
     }
 
-    async getOne(req, res) {
-        const { id } = req.params
-        const item = await Item.findOne({
-            where: { id },
-            include: [{ model: ItemInfo, as: 'info' }]
-        })
-        return res.json(item)
+    async getOne(req, res, next) {
+        try {
+            const { id } = req.params
+            const item = await Item.findOne({
+                where: { id },
+                include: [{ model: ItemInfo, as: 'info' }]
+            })
+            if (!item) {
+                next(ApiError.internal('Товар не найден'))
+            }
+            return res.json(item)
+        } catch (e) {
+            next(ApiError.internal(e.message))
+        }
     }
 
     async search(req, res) {

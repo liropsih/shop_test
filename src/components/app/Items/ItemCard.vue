@@ -24,7 +24,7 @@
         <div class="item-name">
           <span>{{ item.name }}</span>
         </div>
-        <span class="rating-stars star3"></span>
+        <span class="rating-stars" :class="`star${item.rating}`"></span>
         <div class="to-cart" style="">
           <a
             href="#"

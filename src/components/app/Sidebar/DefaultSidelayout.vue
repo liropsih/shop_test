@@ -4,7 +4,7 @@
     <router-link
       v-for="link in links"
       :key="link.id"
-      :to="link.url"
+      :to="{ name: link.route }"
       custom
       v-slot="{ navigate, href, isActive, isExactActive }"
     >
@@ -18,7 +18,7 @@
           <router-link
             v-for="cat in link.cats"
             :key="cat.id"
-            :to="`${link.url}/${cat.id}`"
+            :to="{ name: 'Items-catLink', params: { parentId: cat.id } }"
             custom
             v-slot="{ navigate, href, isActive }"
           >
@@ -30,9 +30,12 @@
               >
                 <!-- SUBCATS -->
                 <router-link
-                  v-for="scat in cat.children"
-                  :key="scat.id"
-                  :to="`${link.url}/${cat.id}/${scat.id}`"
+                  v-for="subcat in cat.children"
+                  :key="subcat.id"
+                  :to="{
+                    name: 'Items',
+                    params: { parentId: subcat.parentId, catId: subcat.id },
+                  }"
                   custom
                   v-slot="{ navigate, href, isActive }"
                 >
@@ -42,7 +45,7 @@
                       @click="navigate"
                       class="collapse-header waves-effect waves-red"
                       :class="isActive && 'active'"
-                      >{{ scat.name }}
+                      >{{ subcat.name }}
                     </a>
                   </li>
                 </router-link>
@@ -81,8 +84,8 @@ export default {
   data: () => ({
     loading: true,
     links: [
-      { id: 0, title: 'Каталог', url: '/items', cats: [] },
-      { id: 1, title: 'Акции', url: '/sale' }
+      { id: 0, title: 'Каталог', route: 'Items-link', cats: [] },
+      { id: 1, title: 'Акции', route: 'Sale' }
     ]
   }),
   computed: {
@@ -90,7 +93,7 @@ export default {
   },
   async mounted() {
     await this.getCats()
-    this.links.forEach(l => (l.url == '/items') && (l.cats = this.cats))
+    this.links.forEach(l => (l.route == 'Items-link') && (l.cats = this.cats))
     this.loading = false
   },
   methods: {

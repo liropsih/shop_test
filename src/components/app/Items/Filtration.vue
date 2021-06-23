@@ -1,5 +1,5 @@
 <template>
-  <form v-if="!loader" @submit.prevent="applyFilters">
+  <form v-if="!loading" @submit.prevent="applyFilters">
     <p>Фильтрация</p>
     <div class="input-field">
       <v-select
@@ -9,12 +9,15 @@
         label="name"
       />
     </div>
-    <button class="waves-effect waves-light btn red lighten-1 m-1" type="submit">
+    <button
+      class="waves-effect waves-light btn red lighten-1 m-1"
+      type="submit"
+    >
       Применить
     </button>
     <button
       class="waves-effect waves-light btn red lighten-1 m-1"
-      @click.prevent="clearFilters"
+      @click.prevent="clear"
     >
       Сбросить
     </button>
@@ -22,10 +25,10 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 export default {
   data: () => ({
-    loader: true
+    loading: true
   }),
   computed: {
     ...mapGetters(['brands']),
@@ -34,17 +37,18 @@ export default {
         return this.$store.getters.brandsFilter
       },
       set(brandsFilter) {
-        this.$store.dispatch('setBrandsFilter', brandsFilter)
+        this.setBrandsFilter(brandsFilter)
       }
     }
   },
   async mounted() {
-    await this.$store.dispatch('getBrands')
-    this.loader = false
+    await this.getBrands()
+    this.loading = false
   },
   methods: {
-    clearFilters() {
-      this.$store.dispatch('clearFilters')
+    ...mapActions(['getBrands', 'clearFilters', 'setBrandsFilter']),
+    clear() {
+      this.clearFilters()
       this.applyFilters()
     },
     applyFilters() {

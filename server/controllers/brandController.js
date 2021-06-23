@@ -6,7 +6,7 @@ class BrandController {
         try {
             const { name } = req.body
             const brand = await Brand.create({ name })
-            return res.json({ brand })
+            return res.json({ message: `Брэнд "${name}" добавлен` })
         } catch (e) {
             next(ApiError.internal(e.message))
         }
@@ -17,10 +17,10 @@ class BrandController {
             const { id, name } = req.body
             let brand = await Brand.findByPk(id)
             if (!brand) {
-                return next(ApiError.badRequest('Бренд не найден'))
+                return next(ApiError.badRequest('Брэнд не найден'))
             }
             brand = await brand.update({ name })
-            return res.json({ brand })
+            return res.json({ message: 'Название брэнда обновлено' })
         } catch (e) {
             next(ApiError.internal(e.message))
         }
@@ -31,21 +31,30 @@ class BrandController {
             const { id } = req.body
             let brand = await Brand.findByPk(id)
             if (!brand) {
-                return next(ApiError.badRequest('Бренд не найден'))
+                return next(ApiError.badRequest('Брэнд не найден'))
             }
             await brand.destroy()
-            return res.json({ message: 'Бренд удалён' })
+            return res.json({ message: `Брэнд "${brand.name}" удалён` })
         } catch (e) {
             next(ApiError.internal(e.message))
         }
     }
 
+    // async getAll(req, res, next) {
+    //     try {
+    //         const brands = await Brand.findAll()
+    //         return res.json({ brands })
+    //     } catch (e) {
+    //         next(ApiError.internal(e.message))
+    //     }
+    // }
+
     async getAll(req, res, next) {
         try {
-            const { id } = req.query
+            const { brandId } = req.query
             let brands
-            if (id) {
-                brands = await Brand.findAll({ where: { id } })
+            if (brandId) {
+                brands = await Brand.findAll({ where: { id: brandId } })
             } else {
                 brands = await Brand.findAll()
             }
