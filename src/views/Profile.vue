@@ -274,7 +274,7 @@ export default {
     }
   },
   destroyed() {
-    this.datepicker?.destroy && this.datepicker.destroy()
+    this.datepicker.destroy && this.datepicker.destroy()
   },
   methods: {
     ...mapActions(['authCheck', 'setError', 'setMessage']),

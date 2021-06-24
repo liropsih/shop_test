@@ -265,7 +265,7 @@ export default {
         data.append('id', this.id)
         data.append('name', this.name)
         data.append('price', this.price)
-        data.append('oldPrice', this.oldPrice)
+        data.append('oldPrice', this.oldPrice || 0)
         data.append('sale', this.sale)
         data.append('sale_tag', this.sale_tag)
         data.append('count', this.count)

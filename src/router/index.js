@@ -30,20 +30,31 @@ const routes = [
     meta: { layout: 'main' },
     component: () => import('@/views/Items.vue')
   },
-  // {
-  //   path: '/items/:id/:subId',
-  //   name: 'Items-subCatLink',
-  //   meta: { layout: 'main' },
-  //   component: () => import('@/views/Items.vue')
-  // },
+  {
+    path: '/item/:id',
+    name: 'Item',
+    meta: { layout: 'main' },
+    component: () => import('@/views/Item.vue')
+  },
   {
     path: '/sale',
     name: 'Sale',
     meta: {
       layout: 'main',
-      title: 'Акции'
+      title: 'Акции',
+      sale: true
     },
-    component: () => import('@/views/Sale.vue')
+    component: () => import('@/views/Items.vue')
+  },
+  {
+    path: '/search',
+    name: 'Search',
+    meta: {
+      layout: 'main',
+      title: 'Результаты поиска',
+      search: true
+    },
+    component: () => import('@/views/Items.vue')
   },
   {
     path: '/login',

@@ -35,7 +35,16 @@ a:focus {
     justify-content: center;
 }
 .h-100 {
-    height: 100%;
+    height: 100% !important;
+}
+.h-auto {
+    height: auto !important;
+}
+.w-100 {
+    width: 100% !important;
+}
+.w-auto {
+    width: auto !important;
 }
 .pointer {
     cursor: pointer !important;
@@ -353,11 +362,15 @@ main {
     &-info {
         margin-bottom: 6px;
 
-        .price {
+        .price,
+        .old-price {
             * {
                 display: inline-block;
                 vertical-align: bottom;
                 text-decoration: none;
+            }
+            .current-price {
+                font-size: 24px;
             }
             ins {
                 font-weight: 400;

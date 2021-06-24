@@ -5,22 +5,8 @@
 </template>
 
 <script>
-// import messages from '@/utils/messages'
-
 export default {
-  name: "empty-layout",
-  // computed: {
-  //   error() {
-  //     return this.$store.getters.error
-  //   }
-  // },
-  // watch: {
-  //   error(error) {
-  //     if (this.$store.getters.error) { 
-  //       this.$error(error || 'Что-то пошло не так') 
-  //     }
-  //   }
-  // }
+  name: "empty-layout"
 }
 </script>
 

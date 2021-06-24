@@ -34,9 +34,6 @@ export default {
     }
   },
   mounted() {
-    if (process.env.NODE_ENV === 'development') {
-      this.production = false
-    }
     M.Autocomplete.init(this.$refs.search, {
       data: this.acDropdown,
       minLength: 3,
@@ -46,35 +43,36 @@ export default {
     this.autocomplete = M.Autocomplete.getInstance(this.$refs.search)
   },
   destroyed() {
-    this.autocomplete?.destroy && this.autocomplete.destroy()
+    this.autocomplete.destroy && this.autocomplete.destroy()
   },
   methods: {
     ...mapActions(['setError']),
     async getItems(value) {
       try {
         const { limit } = this.autocomplete.options
-        const { data } = await $axios.get(`/api/item/search?name=${value}&limit=${limit}`)
+        const { data } = await $axios.get('/api/item/search', { params: { search: value, limit } })
         this.acItems = data.rows
         data.rows.forEach(item => {
-          this.acDropdown[item.name] = process.env.VUE_APP_API_URL + item.img
+          this.acDropdown[item.name] = `${process.env.VUE_APP_API_URL}/${item.img}`
         })
       } catch (e) {
         this.setError(e)
       }
     },
     goToItem(name) {
-        let id
-        this.acItems.forEach(item => {
-          if (item.name = name) { id = item.id }
-        })
-        // var result = sample.filter(function (item) {
-        //   return item.name == name
-        // })
-        // var result1 = sample.filter(item => item.name == name)
-        this.$router.push(`/item/${id}`)
+      let id
+      this.acItems.forEach(item => {
+        if (item.name = name) { id = item.id }
+      })
+      // var result = sample.filter(function (item) {
+      //   return item.name == name
+      // })
+      // var result1 = sample.filter(item => item.name == name)
+      // this.$router.push(`/item/${id}`)
+      this.$router.push({ name: 'Item', params: { id } })
     },
     searchHandler() {
-      this.$router.push(`/search?val=${this.searchValue}`)
+      this.$router.push({ name: 'Search', query: { searchValue: this.searchValue } })
     }
   }
 }

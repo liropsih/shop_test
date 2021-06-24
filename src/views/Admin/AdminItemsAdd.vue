@@ -184,12 +184,8 @@ export default {
       this.name = null
       this.price = null
       this.count = null
-      this.brandId = null
-      this.catId = null
-      this.subcatId = null
       this.img = null
       this.info = []
-      this.subcats = null
       this.imgPreview = null
     },
     async submitHandler() {

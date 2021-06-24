@@ -24,9 +24,11 @@ export default {
         },
     },
     actions: {
-        async getItems({ commit, dispatch }, { catId, params }) {
+        async getItems({ commit, dispatch }, { catId, params, sale, search }) {
             try {
-                const { data } = await $axios.get(`/api/item/get/${catId}`, { params })
+                const { data } = (sale && await $axios.get(`/api/item/sale`, { params: { ...params, sale } })) ||
+                    (search && await $axios.get(`/api/item/search`, { params })) ||
+                    await $axios.get(`/api/item/get/${catId}`, { params })
                 commit('getItems', data)
             } catch (e) {
                 dispatch('setError', e)

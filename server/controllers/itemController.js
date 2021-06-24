@@ -95,8 +95,9 @@ class ItemController {
     }
 
     async getAll(req, res) {
+        console.log(req.query)
         const { catId } = req.params
-        let { brandId, limit, page } = req.query
+        let { brandId, sale, search, limit, page } = req.query
         page = page || 1
         limit = limit || 12
         let offset = page * limit - limit
@@ -112,6 +113,18 @@ class ItemController {
         }
         if (brandId && catId) {
             items = await Item.findAndCountAll({ where: { brandId, catId }, limit, offset })
+        }
+        if (!brandId && search) {
+            items = await Item.findAndCountAll({ where: { name: { [Op.iLike]: '%' + search + '%' } }, limit })
+        }
+        if (brandId && search) {
+            items = await Item.findAndCountAll({ where: { brandId, name: { [Op.iLike]: '%' + search + '%' } }, limit })
+        }
+        if (!brandId && sale) {
+            items = await Item.findAndCountAll({ where: { sale }, limit, offset })
+        }
+        if (brandId && sale) {
+            items = await Item.findAndCountAll({ where: { brandId, sale }, limit, offset })
         }
         return res.json(items)
     }
@@ -132,15 +145,15 @@ class ItemController {
         }
     }
 
-    async search(req, res) {
-        let { name, limit } = req.query
-        limit = limit || 10
-        let items
-        if (name) {
-            items = await Item.findAndCountAll({ where: { name: { [Op.iLike]: '%' + name + '%' } }, limit })
-        }
-        return res.json(items)
-    }
+    // async search(req, res) {
+    //     let { value, limit } = req.query
+    //     limit = limit || 12
+    //     let items
+    //     if (value) {
+    //         items = await Item.findAndCountAll({ where: { name: { [Op.iLike]: '%' + value + '%' } }, limit })
+    //     }
+    //     return res.json(items)
+    // }
 }
 
 module.exports = new ItemController()

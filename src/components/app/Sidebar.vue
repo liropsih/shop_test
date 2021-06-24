@@ -54,11 +54,6 @@ export default {
     }
   },
   async mounted() {
-    // let test = await $axios.get('/api/items', {
-    //   query: {catId: '5'}
-    // })
-    // debugger
-
     this.SidenavInit(this.$refs.Sidenav)
   },
   watch: {
@@ -70,7 +65,7 @@ export default {
     }
   },
   destroyed() {
-    this.Sidenav?.destroy && this.Sidenav.destroy()
+    this.Sidenav.destroy && this.Sidenav.destroy()
   },
   methods: {
     SidenavInit(el) {

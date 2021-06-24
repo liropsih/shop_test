@@ -24,7 +24,8 @@
           <ul class="right">
             <!-- Dropdown Cart -->
             <li v-if="isLoggedIn">
-              <a
+              <Cart />
+              <!-- <a
                 class="dropdown-trigger no-autoinit"
                 href="#!"
                 data-target="dropdownCart"
@@ -73,7 +74,7 @@
                     >Оформить заказ</a
                   >
                 </li>
-              </ul>
+              </ul> -->
             </li>
             <!-- Dropdown Profile -->
             <li>
@@ -131,12 +132,14 @@
 
 <script>
 import Search from '@/components/Search.vue'
+import Cart from '@/components/app/Navbar/Cart.vue'
 import { mapActions, mapGetters } from 'vuex'
+
 export default {
   name: 'Navbar',
-  components: { Search },
+  components: { Search, Cart },
   computed: {
-    ...mapGetters(['isLoggedIn', 'isAdmin', 'username', 'cart'])
+    ...mapGetters(['isLoggedIn', 'isAdmin', 'username'])
   },
   mounted() {
     // this.getCart()
@@ -144,13 +147,13 @@ export default {
       constrainWidth: false,
       coverTrigger: false
     })
-    M.Dropdown.init(this.$refs.dropdownCart, {
-      constrainWidth: false,
-      coverTrigger: false
-    })
+    // M.Dropdown.init(this.$refs.dropdownCart, {
+    //   constrainWidth: false,
+    //   coverTrigger: false
+    // })
   },
   methods: {
-    ...mapActions(['SidenavTrigger', 'getCart']),
+    ...mapActions(['SidenavTrigger']),
     logout() {
       this.$store.dispatch('logout')
       this.$router.push('/?message=logout')
