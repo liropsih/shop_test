@@ -4,7 +4,7 @@
       <h5>{{ title }}</h5>
     </div>
     <div class="row">
-      <form class="col s6 offset-s3" @submit.prevent="submitHandler">
+      <form class="col s12 m12 l6 offset-l3" @submit.prevent="submitHandler">
         <div class="row">
           <div class="input-field col s12">
             <input type="text" id="name" v-model="name" />

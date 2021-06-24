@@ -19,7 +19,9 @@
         <div class="col s7 pl-5 item-info">
           <div>
             <p class="mb-2">Цена:</p>
-            <div class="price"><span class="current-price">{{ price }}₽</span></div>
+            <div class="price">
+              <span class="current-price">{{ price }}₽</span>
+            </div>
             <div class="old-price">
               <span class="sale" v-if="oldPrice && sale">
                 <del>{{ oldPrice }}₽</del>
@@ -39,8 +41,22 @@
                 class="waves-effect waves-light btn red lighten-1"
                 :disabled="!count"
               >
-                {{count? 'В корзину' : 'Нет в наличии'}}
+                {{ count ? "В корзину" : "Нет в наличии" }}
               </button>
+            </div>
+            <div v-if="isAdmin">
+              <router-link
+                :to="{ name: 'AdminItemsEdit', query: { id } }"
+                custom
+                v-slot="{ navigate }"
+              >
+                <button
+                  @click="navigate"
+                  class="waves-effect waves-light btn red lighten-1"
+                >
+                  Редактировать <i class="material-icons right">edit</i>
+                </button>
+              </router-link>
             </div>
           </div>
         </div>
@@ -68,7 +84,7 @@ export default {
     imgPreview: null
   }),
   computed: {
-    ...mapGetters(['brands']),
+    ...mapGetters(['brands', 'isAdmin']),
     id() { return +this.$route.params.id },
     brandName() {
       let brandname = ''

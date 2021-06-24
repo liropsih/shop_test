@@ -1,5 +1,6 @@
 <template>
-  <form class="card auth-card" @submit.prevent="loginHandler">
+<div class="row pt-5 ml-5 mr-5">
+  <form class="card auth-card col s12 m8 l6 offset-m2 offset-l3" @submit.prevent="loginHandler">
     <div class="card-content">
       <span class="card-title">NodeJS + VUE - Test Shop</span>
       <div class="input-field">
@@ -57,18 +58,13 @@
       </p>
     </div>
   </form>
+  </div>
 </template>
 
 <script>
 import { email, required } from 'vuelidate/lib/validators'
-// import messages from '@/utils/messages'
 import { mapActions } from 'vuex'
 export default {
-  //   metaInfo () {
-  //     return {
-  //       title: this.$title('Login')
-  //     }
-  //   },
   name: 'Login',
   data: () => ({
     email: '',
@@ -78,11 +74,6 @@ export default {
     email: { email, required },
     password: { required }
   },
-  // mounted() {
-  //   if (messages[this.$route.query.message]) {
-  //     this.$message(messages[this.$route.query.message])
-  //   }
-  // },
   methods: {
     ...mapActions(['login']),
     async loginHandler() {

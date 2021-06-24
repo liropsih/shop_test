@@ -4,7 +4,7 @@
       <h5>{{ title }}</h5>
     </div>
     <div class="row">
-      <form class="col s6 offset-s3" @submit.prevent="submitHandler">
+      <form class="col s12 m12 l6 offset-l3" @submit.prevent="submitHandler">
         <div class="row">
           <div class="input-field col s12">
             <input type="number" id="id" v-model="id" />
@@ -159,9 +159,6 @@ import $axios from '@/http'
 import { mapActions, mapGetters } from 'vuex'
 export default {
   name: 'AdminItemsEdit',
-  props: {
-    itemId: { type: Number } //удалить default
-  },
   data: () => ({
     id: null,
     name: null,
@@ -180,9 +177,8 @@ export default {
   }),
   computed: {
     ...mapGetters(['brands', 'cats']),
-    title() {
-      return this.$route.meta.title
-    }
+    title() { return this.$route.meta.title },
+    itemId() { return +this.$route.query.id }
   },
   async mounted() {
     await this.getBrands()

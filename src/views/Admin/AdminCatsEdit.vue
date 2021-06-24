@@ -4,7 +4,7 @@
       <h5>{{ title }}</h5>
     </div>
     <div class="row">
-      <form class="col s6 offset-s3 mb-5">
+      <form class="col s12 m12 l6 offset-l3 mb-5">
         <!-- CATS -->
         <div class="input-field col s12">
           <select id="cats" @change="catIdx = $event.target.value" ref="cats">
@@ -93,7 +93,7 @@
         </div>
       </form>
       <!-- SUBCATS -->
-      <form class="col s6 offset-s3">
+      <form class="col s12 m12 l6 offset-l3">
         <div class="input-field col s12">
           <select
             id="subcats"
