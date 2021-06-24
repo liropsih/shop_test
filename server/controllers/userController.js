@@ -123,25 +123,14 @@ class UserController {
             next(ApiError.internal(e.message))
         }
     }
-///////////////
+    
     async getUserCart(req, res, next) {
         try {
             const { id } = req.user
-            const user = await User.findByPk(id, {
-                include: Cart
-            })
-            const { cart } = await User.findByPk(id, {
-                include: Cart
-            })
-            console.log(cart.id)
-            const cartcart = await Cart.findByPk(cart.id, {
+            const cart = await Cart.findOne({ where: { userId: id } }, {
                 include: Item
             })
-            console.log(cartcart)
-            return
-            const item = await cartcart.addItem(1)
-            console.log(item)
-            return
+            console.log(cart)
             return res.json(cart)
         } catch (e) {
             next(ApiError.internal(e.message))
