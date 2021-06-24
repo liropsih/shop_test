@@ -15,6 +15,7 @@
       </transition-group>
 
       <Paginate
+        v-if="pageCount > 1"
         v-model="page"
         :page-count="pageCount"
         :click-handler="pageChangeHandler"
@@ -61,7 +62,6 @@ export default {
     }
   },
   async mounted() {
-    // this.paramsInit()
     await this.getBrands()
     await this.setupPagination()
     this.loader = false
@@ -69,10 +69,6 @@ export default {
   watch: {
     $route: 'setupPagination'
   },
-  // async beforeRouteUpdate(to, from, next) {
-  //   await this.setupPagination()
-  //   next()
-  // },
   methods: {
     ...mapActions(['getBrands', 'getBrandsFilter', 'setBrandsFilter']),
     async getItems() {
