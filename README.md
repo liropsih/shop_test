@@ -6,9 +6,7 @@ npm install
 ```
 
 ### База данных PostgreSQL
-```
 Бэкап базы данных хранится в /server/database/DATABASE.sql
-```
 
 ### Запуск в режиме разработки
 ```
