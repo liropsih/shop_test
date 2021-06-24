@@ -1,128 +1,64 @@
-// import axios from 'axios'
+import $axios from '@/http'
+import { decode } from 'jsonwebtoken'
 
-import { useFetch } from '@/functions/useFetch.function'
-const userData = JSON.parse(localStorage.getItem('userData')) || {}
+const token = localStorage.getItem('token')
 
 export default {
     state: {
-        token: userData.token || null,
-        name: userData.name || null,
-        status: userData.status || null
+        token: token || null,
+        name: token ? decode(token).name : null,
+        roles: token ? decode(token).roles : []
     },
     mutations: {
         login(state, data) {
-            state.token = data.token
-            state.name = data.name
-            state.status = data.status || null
+            state.token = data
+            state.name = decode(data).name
+            state.roles = decode(data).roles
         },
         logout(state) {
             state.token = null
-            localStorage.removeItem('userData')
+            state.name = null
+            state.roles = []
+            localStorage.removeItem('token')
         }
     },
     actions: {
-        async register({ dispatch, commit }, body) {
+        async register({ commit, dispatch }, body) {
             try {
-                await useFetch('/api/auth/register', 'POST', body)
-                await dispatch('login', body)
-            } catch (e) {
-                commit('setError', e.message)
-                setTimeout(() => commit('clearError'), 200)
-                throw (e)
-            }
-        },
-
-        async login({ commit }, body) {
-            try {
-                const data = await useFetch('/api/auth/login', 'POST', body)
-                localStorage.setItem('userData', JSON.stringify({
-                    token: data.token,
-                    name: data.name,
-                    status: data.status
-                }))
+                const { data } = await $axios.post('/api/user/register', body)
+                localStorage.setItem('token', data)
                 commit('login', data)
             } catch (e) {
-                commit('setError', e.message)
-                setTimeout(() => commit('clearError'), 200)
-                throw (e)
+                dispatch('setError', e)
             }
         },
-
+        async login({ commit, dispatch }, body) {
+            try {
+                const { data } = await $axios.post('/api/user/login', body)
+                localStorage.setItem('token', data)
+                commit('login', data)
+            } catch (e) {
+                dispatch('setError', e)
+            }
+        },
         logout({ commit }) {
             commit('logout')
         },
-
-        async tokenVerify({ commit }) {
+        async authCheck({ commit, dispatch }) {
             try {
-                const body = { token: this.getters.token }
-                await useFetch('/api/auth/tokenverify', 'POST', body)
+                const { data } = await $axios.get('/api/user/auth')
+                localStorage.setItem('token', data)
+                commit('login', data)
             } catch (e) {
+                dispatch('setError', e)
                 commit('logout')
             }
         }
-
-        // async login({ commit }, user) {
-        //     const response = await axios({ url: '/login', data: user, method: 'POST' })
-        //     try {
-        //         const token = response.data.token
-        //         // const user = response.data.user
-        //         // console.log(response)
-        //         const data = { token }
-        //         localStorage.setItem('token', token)
-        //         axios.defaults.headers.common['Authorization'] = token
-        //         commit('login', data)
-        //     } catch (e) {
-        //         localStorage.removeItem('token')
-        //         commit('setError', e)
-        //         throw e
-        //     }
-        // },
-        // async register({ commit }, user) {
-        //     const response = await axios({ url: '/register', data: user, method: 'POST' })
-        //     try {
-        //         console.log('reg_response :', response)
-        //         // const token = response.data.token
-        //         const user = response.data.user
-        //         const data = { 
-        //             // token, 
-        //             user }
-        //         console.log('data: ', data)
-        //         // localStorage.setItem('token', token)
-        //         // axios.defaults.headers.common['Authorization'] = token
-        //         commit('login', data)
-
-        //     } catch (e) {
-        //         // localStorage.removeItem('token')
-        //         commit('setError', e)
-        //         throw e
-        //     }
-
-        // },
-
-        // async getUser({ commit }) {
-        //     const token = { token: this.getters.getToken }
-        //     const response = await axios({ url: '/getuser', data: token, method: 'POST' })
-        //     try {
-        //         const user = response.data.user
-        //         const data = { user }
-        //         commit('setUser', data)
-        //     } catch (e) {
-        //         commit('setError', e)
-        //         throw e
-        //     }
-        // },
-
-        // logout({ commit }) {
-        //     localStorage.removeItem('token')
-        //     delete axios.defaults.headers.common['Authorization']
-        //     commit('logout')
-        // }
-
     },
     getters: {
         isLoggedIn: s => !!s.token,
+        isAdmin: s => s.roles ? !!s.roles.length : false,
         username: s => s.name,
-        token: s => s.token,
-        status: s => s.status
+        roles: s => s.roles
     }
 }

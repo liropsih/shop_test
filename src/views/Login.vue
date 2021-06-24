@@ -1,7 +1,8 @@
 <template>
-  <form class="card auth-card" @submit.prevent="login">
+<div class="row pt-5 ml-5 mr-5">
+  <form class="card auth-card col s12 m8 l6 offset-m2 offset-l3" @submit.prevent="loginHandler">
     <div class="card-content">
-      <span class="card-title">Laravel Test Shop</span>
+      <span class="card-title">NodeJS + VUE - Test Shop</span>
       <div class="input-field">
         <input
           id="email"
@@ -17,12 +18,12 @@
         <small
           v-if="$v.email.$dirty && !$v.email.required"
           class="helper-text invalid"
-          >Поле Email не должно быть пустым</small
+          >Email не должен быть пустым</small
         >
         <small
           v-else-if="$v.email.$dirty && !$v.email.email"
           class="helper-text invalid"
-          >Введите корректный Email</small
+          >Некорректный Email</small
         >
       </div>
       <div class="input-field">
@@ -30,24 +31,13 @@
           id="password"
           type="password"
           v-model.trim="password"
-          :class="{
-            invalid:
-              ($v.password.$dirty && !$v.password.required) ||
-              ($v.password.$dirty && !$v.password.minLength),
-          }"
+          :class="{invalid:$v.password.$dirty && !$v.password.required}"
         />
         <label for="password">Пароль</label>
         <small
           v-if="$v.password.$dirty && !$v.password.required"
           class="helper-text invalid"
-          >Поле Password не должно быть пустым</small
-        >
-        <small
-          v-else-if="$v.password.$dirty && !$v.password.minLength"
-          class="helper-text invalid"
-          >Пароль должен содержать не менее
-          {{ $v.password.$params.minLength.min }} символов. Сейчас он
-          {{ password.length }}</small
+          >Пароль не должен быть пустым</small
         >
       </div>
     </div>
@@ -68,45 +58,37 @@
       </p>
     </div>
   </form>
+  </div>
 </template>
 
 <script>
-import { email, required, minLength } from 'vuelidate/lib/validators'
-import messages from '@/utils/messages'
+import { email, required } from 'vuelidate/lib/validators'
+import { mapActions } from 'vuex'
 export default {
-  //   metaInfo () {
-  //     return {
-  //       title: this.$title('Login')
-  //     }
-  //   },
-  name: 'login',
+  name: 'Login',
   data: () => ({
     email: '',
     password: ''
   }),
   validations: {
     email: { email, required },
-    password: { required, minLength: minLength(6) }
-  },
-  mounted() {
-    if (messages[this.$route.query.message]) {
-      this.$message(messages[this.$route.query.message])
-    }
+    password: { required }
   },
   methods: {
-    async login() {
+    ...mapActions(['login']),
+    async loginHandler() {
       if (this.$v.$invalid) {
         this.$v.$touch()
         return
       }
-      const formData = {
+      const data = {
         email: this.email,
         password: this.password
       }
 
       try {
-        await this.$store.dispatch('login', formData)
-        this.$router.push('/dashboard')
+        await this.login(data)
+        this.$router.push('/profile')
       } catch (e) { }
     }
   }

@@ -12,10 +12,21 @@ class RoleController {
         }
     }
 
+    async update(req, res, next) {
+        try {
+            const { id, value } = req.body
+            let role = await Role.findByPk(id)
+            role = await role.update({ value })
+            return res.json({ role })
+        } catch (e) {
+            next(ApiError.internal(e.message))
+        }
+    }
+
     async destroy(req, res, next) {
         try {
-            const { value } = req.body
-            const role = await Role.findByPk(value)
+            const { id } = req.body
+            const role = await Role.findByPk(id)
             if (!role) {
                 return next(ApiError.badRequest('Роль не найдена'))
             }
