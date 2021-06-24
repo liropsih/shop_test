@@ -58,8 +58,8 @@ export default {
           { id: 3, title: 'Редактировать брэнды', route: 'AdminBrandsEdit' }
         ]
       },
-      { id: 2, title: 'Управление заказами', route: 'AdminOrder' },
-      { id: 3, title: 'Управление доступом', route: 'AdminRoles' }
+      // { id: 2, title: 'Управление заказами', route: 'AdminOrder' },
+      // { id: 3, title: 'Управление доступом', route: 'AdminRoles' }
     ]
   })
 }
