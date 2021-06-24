@@ -1,16 +1,21 @@
 # shop1-nodejs
 
-## Project setup
+## Установка
 ```
 npm install
 ```
 
-### Compiles and hot-reloads for development
+### База данных PostgreSQL
 ```
-npm run serve
+Бэкап базы данных хранится в /server/database/DATABASE.sql
 ```
 
-### Compiles and minifies for production
+### Запуск в режиме разработки
+```
+npm run dev
+```
+
+### Компилирование для production
 ```
 npm run build
 ```
