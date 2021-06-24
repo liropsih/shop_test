@@ -10,9 +10,10 @@ const routes = [
     name: 'Home',
     meta: {
       layout: 'main',
-      title: 'Главная страница'
+      title: 'Главная страница',
+      sale: true
     },
-    component: () => import('@/views/Home.vue')
+    component: () => import('@/views/Items.vue')
   },
   {
     path: '/items',
@@ -36,16 +37,16 @@ const routes = [
     meta: { layout: 'main' },
     component: () => import('@/views/Item.vue')
   },
-  {
-    path: '/sale',
-    name: 'Sale',
-    meta: {
-      layout: 'main',
-      title: 'Акции',
-      sale: true
-    },
-    component: () => import('@/views/Items.vue')
-  },
+  // {
+  //   path: '/sale',
+  //   name: 'Sale',
+  //   meta: {
+  //     layout: 'main',
+  //     title: 'Акции',
+  //     sale: true
+  //   },
+  //   component: () => import('@/views/Items.vue')
+  // },
   {
     path: '/search',
     name: 'Search',

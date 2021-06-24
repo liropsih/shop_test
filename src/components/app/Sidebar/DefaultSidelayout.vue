@@ -85,7 +85,7 @@ export default {
     loading: true,
     links: [
       { id: 0, title: 'Каталог', route: 'Items-link', cats: [] },
-      { id: 1, title: 'Акции', route: 'Sale' }
+      // { id: 1, title: 'Акции', route: 'Sale' }
     ]
   }),
   computed: {

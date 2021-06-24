@@ -7,7 +7,7 @@
     >
       <a class="item" :href="href" @click="navigate">
         <div class="item-img">
-          <img :src="`${api}/${item.img}`" />
+          <img class="w-100" :src="`${api}/${item.img}`" />
           <p class="tag" v-if="item.sale">{{ item.sale_tag }}</p>
         </div>
         <div class="item-info">
